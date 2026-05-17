@@ -4,77 +4,333 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>POC — artifacts-publisher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* =========================================================
+     MAESTRO CUSTOM THEME — SNAPSHOT
+     Captured: 2026-05-17 via `maestro-cli settings get customThemeColors`
+     ========================================================= */
   :root {
-    --bg: #0d1117;
-    --fg: #e6edf3;
-    --muted: #8b949e;
-    --accent: #58a6ff;
-    --border: #30363d;
-    --card: #161b22;
-    --code-bg: #1f2428;
-    --success: #3fb950;
+    --bg-main:           #0c0e0c;
+    --bg-sidebar:        #0f100f;
+    --bg-activity:       #141415;
+    --border:            #111311;
+    --text-main:         #f2f2c0;
+    --text-dim:          #cec8ba;
+    --accent:            #5b675b;
+    --accent-dim:        #262121;
+    --accent-text:       #ffffff;
+    --accent-foreground: #262121;
+    --success:           #bed78e;
+    --warning:           #d0a795;
+    --error:             #ff5555;
+
+    --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --font-size: 14px;
   }
+
   * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif; line-height: 1.6; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-main);
+    color: var(--text-main);
+    font-family: var(--font-mono);
+    font-size: var(--font-size);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
 
-  /* Gate styles */
-  #gate { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
-  #gate .gate-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 40px; max-width: 420px; width: 100%; text-align: center; }
-  #gate h1 { font-size: 1.4rem; margin: 0 0 8px; }
-  #gate p { color: var(--muted); margin: 0 0 24px; font-size: 0.9rem; }
-  #gate input { width: 100%; padding: 12px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--fg); font-size: 1rem; font-family: ui-monospace, monospace; outline: none; transition: border-color 0.2s; }
+  /* =========================================================
+     GATE
+     ========================================================= */
+  #gate {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+    background:
+      radial-gradient(ellipse at center, rgba(91, 103, 91, 0.08) 0%, transparent 60%),
+      var(--bg-main);
+  }
+  #gate .gate-card {
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 40px 36px;
+    max-width: 440px;
+    width: 100%;
+    text-align: left;
+    box-shadow: 0 0 0 1px var(--border), 0 24px 60px rgba(0,0,0,0.5);
+  }
+  #gate .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--accent-dim);
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  #gate h1 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0 0 6px;
+    color: var(--text-main);
+    letter-spacing: -0.01em;
+  }
+  #gate p.lead {
+    color: var(--text-dim);
+    margin: 0 0 24px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  #gate label {
+    display: block;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  #gate input {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--bg-main);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    font-family: var(--font-mono);
+    outline: none;
+    transition: border-color 0.15s;
+  }
   #gate input:focus { border-color: var(--accent); }
-  #gate button { width: 100%; margin-top: 12px; padding: 12px; background: var(--accent); color: #0d1117; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; }
-  #gate button:hover { opacity: 0.9; }
-  #gate .err { color: #f85149; font-size: 0.85rem; margin-top: 12px; min-height: 1.2em; }
+  #gate button {
+    width: 100%;
+    margin-top: 14px;
+    padding: 10px;
+    background: var(--accent);
+    color: var(--accent-text);
+    border: 1px solid var(--accent);
+    border-radius: 3px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-family: var(--font-mono);
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  #gate button:hover { background: #6d796d; border-color: #6d796d; }
+  #gate .err {
+    color: var(--error);
+    font-size: 0.8rem;
+    margin-top: 12px;
+    min-height: 1.2em;
+    font-family: var(--font-mono);
+  }
+  #gate .footnote {
+    margin-top: 28px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    line-height: 1.6;
+  }
+  #gate .prompt::before { content: "$ "; color: var(--accent); }
 
-  /* Content styles */
-  #content { display: none; max-width: 880px; margin: 0 auto; padding: 60px 32px; }
-  #content header { border-bottom: 1px solid var(--border); padding-bottom: 24px; margin-bottom: 32px; }
-  #content h1 { font-size: 2.2rem; margin: 0 0 12px; letter-spacing: -0.02em; }
-  #content .meta { color: var(--muted); font-size: 0.9rem; display: flex; gap: 16px; flex-wrap: wrap; }
-  #content .meta span::before { content: "•"; margin-right: 16px; color: var(--border); }
-  #content .meta span:first-child::before { content: ""; margin-right: 0; }
-  #content h2 { font-size: 1.5rem; margin-top: 48px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
-  #content h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 12px; color: var(--accent); }
-  #content p { margin: 0 0 16px; }
-  #content ul, #content ol { padding-left: 24px; }
-  #content li { margin-bottom: 6px; }
-  #content code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, "SF Mono", monospace; font-size: 0.9em; }
-  #content pre { background: var(--code-bg); border: 1px solid var(--border); padding: 16px; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; }
-  #content pre code { background: transparent; padding: 0; }
-  #content table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-  #content th, #content td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
-  #content th { background: var(--card); font-weight: 600; }
-  #content .pill { display: inline-block; padding: 2px 10px; background: var(--card); border: 1px solid var(--border); border-radius: 999px; font-size: 0.8rem; color: var(--muted); }
-  #content .status { display: inline-block; padding: 4px 12px; background: rgba(63, 185, 80, 0.15); color: var(--success); border-radius: 6px; font-size: 0.85rem; font-weight: 500; }
-  #content footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; text-align: center; }
+  /* =========================================================
+     CONTENT
+     ========================================================= */
+  #content { display: none; max-width: 900px; margin: 0 auto; padding: 56px 32px 80px; }
+  #content header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+  #content .crumb {
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  #content .crumb .accent { color: var(--accent); }
+  #content h1 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin: 0 0 14px;
+    letter-spacing: -0.02em;
+    color: var(--text-main);
+  }
+  #content .meta {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  #content .meta span { display: inline-flex; align-items: center; }
+  #content .pill {
+    display: inline-block;
+    padding: 2px 10px;
+    background: var(--accent-dim);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  #content .status {
+    display: inline-block;
+    padding: 3px 10px;
+    background: rgba(190, 215, 142, 0.12);
+    border: 1px solid var(--success);
+    color: var(--success);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  #content h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 44px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  #content h2::before {
+    content: "▸ ";
+    color: var(--accent);
+  }
+  #content h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-top: 26px;
+    margin-bottom: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+  #content p { margin: 0 0 14px; color: var(--text-main); }
+  #content ul, #content ol { padding-left: 22px; }
+  #content li { margin-bottom: 6px; color: var(--text-main); }
+  #content li::marker { color: var(--accent); }
+  #content a { color: var(--accent); text-decoration: underline; text-decoration-color: var(--border); text-underline-offset: 3px; }
+  #content a:hover { color: var(--success); text-decoration-color: var(--success); }
+  #content code {
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--text-main);
+  }
+  #content pre {
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border);
+    padding: 16px 18px;
+    border-radius: 3px;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    margin: 14px 0;
+  }
+  #content pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: var(--text-main);
+  }
+  #content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.88rem;
+  }
+  #content th, #content td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  #content th {
+    background: var(--bg-activity);
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--accent);
+  }
+  #content tr:hover td { background: var(--accent-dim); }
+  #content strong { color: var(--text-main); font-weight: 700; }
+  #content footer {
+    margin-top: 64px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+  #content footer .accent { color: var(--accent); }
+
+  /* Scrollbar terminal feel */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg-sidebar); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 0; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 </style>
 </head>
 <body>
 
-<!-- PASSWORD GATE -->
+<!-- =========================================================
+     PASSWORD GATE
+     ========================================================= -->
 <div id="gate">
   <div class="gate-card">
-    <h1>Conteúdo protegido</h1>
-    <p>Insira a senha compartilhada pelo time.</p>
+    <div class="badge">protected · vibework-knowledge</div>
+    <h1>Acesso restrito</h1>
+    <p class="lead">Este artefato exige autenticação. Insira a senha compartilhada pelo time.</p>
     <form id="gate-form">
-      <input type="password" id="gate-input" placeholder="senha" autocomplete="off" autofocus>
-      <button type="submit">Acessar</button>
+      <label for="gate-input">senha</label>
+      <input type="password" id="gate-input" autocomplete="off" autofocus spellcheck="false">
+      <button type="submit">› ACESSAR</button>
       <div class="err" id="gate-err"></div>
     </form>
+    <div class="footnote">
+      <div class="prompt">artifacts-publisher · maestro-theme · sha-256</div>
+      Sessão persistente nesta aba. F5 não exige nova senha.
+    </div>
   </div>
 </div>
 
-<!-- CONTENT (hidden until gate passes) -->
+<!-- =========================================================
+     CONTENT
+     ========================================================= -->
 <main id="content">
   <header>
+    <div class="crumb">
+      vibework-knowledge <span class="accent">›</span>
+      research <span class="accent">›</span>
+      2026-05-artifacts-publisher <span class="accent">›</span>
+      poc-skill-design
+    </div>
     <h1>POC — Skill <code>artifacts-publisher</code></h1>
     <div class="meta">
-      <span><span class="pill">2026-05-17</span></span>
-      <span>Gerado por: Claude Code</span>
-      <span>Sessão: vw2-root-cc</span>
+      <span class="pill">2026-05-17</span>
+      <span class="pill">claude-code</span>
+      <span class="pill">vw2-root-cc</span>
       <span class="status">POC validada</span>
     </div>
   </header>
@@ -85,7 +341,7 @@
   <h2>Objetivo</h2>
   <p>Adaptar esse padrão para o VibeworkV2 como skill global reutilizável, com dois modos:</p>
   <ul>
-    <li><strong>Simple:</strong> template básico, rápido, tipografia limpa (esta página é um exemplo)</li>
+    <li><strong>Simple:</strong> template básico, rápido, tipografia limpa <em>(esta página é um exemplo)</em></li>
     <li><strong>Full:</strong> chama a skill <code>visual-explainer</code> para HTML "fodástico"</li>
   </ul>
 
@@ -97,6 +353,8 @@
       <tr><td>Password gate</td><td>Client-side JS hash (SHA-256)</td></tr>
       <tr><td>Renderização</td><td>Dois modos: <code>--simple</code> e <code>--full</code></td></tr>
       <tr><td>Repo destino</td><td><code>vibework-knowledge</code> (dedicado)</td></tr>
+      <tr><td>Theme</td><td>Snapshot do Maestro via <code>maestro-cli settings get</code></td></tr>
+      <tr><td>Fonte</td><td>JetBrains Mono (web-font Google Fonts)</td></tr>
     </tbody>
   </table>
 
@@ -106,10 +364,12 @@
 ├── templates/
 │   ├── artifact-readme.md.tpl
 │   ├── password-gate.html.tpl
-│   └── simple-page.html.tpl
+│   ├── simple-page.html.tpl
+│   └── theme-snapshot.css.tpl      ← snapshot Maestro
 └── scripts/
     ├── publish.sh
     ├── gate.sh
+    ├── theme-fetch.sh              ← chama maestro-cli
     └── slugify.sh</code></pre>
 
   <h2>Flags propostas</h2>
@@ -119,12 +379,14 @@
     <li><code>--password &lt;senha&gt;</code> → define senha do gate</li>
     <li><code>--no-gate</code> → publica público</li>
     <li><code>--slug &lt;nome&gt;</code> → override do slug</li>
+    <li><code>--no-theme</code> → ignora theme Maestro (cores genéricas)</li>
   </ul>
 
   <h2>Pipeline comum</h2>
   <ol>
+    <li>Captura snapshot do theme via <code>maestro-cli settings get customThemeColors</code></li>
     <li>Gera <code>raw.md</code></li>
-    <li>Gera <code>index.html</code> (simple ou full)</li>
+    <li>Gera <code>index.html</code> (simple ou full) com tokens injetados</li>
     <li>Aplica password gate JS</li>
     <li>Cria/atualiza <code>artifacts/README.md</code></li>
     <li>Commit + push no repo</li>
@@ -132,17 +394,32 @@
     <li>Retorna URL final</li>
   </ol>
 
+  <h2>Theme aplicado</h2>
+  <p>Cores capturadas do seu Maestro em <strong>2026-05-17 06:54</strong>:</p>
+<pre><code>{
+  "bgMain":     "#0c0e0c",   ← background
+  "bgSidebar":  "#0f100f",   ← cards, code
+  "bgActivity": "#141415",   ← table headers
+  "border":     "#111311",
+  "textMain":   "#f2f2c0",   ← cream-yellow body
+  "textDim":    "#cec8ba",   ← metadata
+  "accent":     "#5b675b",   ← military green
+  "success":    "#bed78e",   ← status badges
+  "warning":    "#d0a795",
+  "error":      "#ff5555"    ← senha incorreta
+}</code></pre>
+  <p>Visual: <strong>terminal-hacker / fallout-CRT</strong>. Texto cream-yellow sobre near-black green-tinted. Monospace JetBrains Mono em tudo. Coerente com a estética do Maestro.</p>
+
   <h2>Status</h2>
-  <p>POC manual em execução para validar o fluxo end-to-end antes de codificar a skill. <strong>Esta página é o output do teste.</strong></p>
+  <p>POC manual em execução para validar o fluxo end-to-end antes de codificar a skill. <strong>Esta página é o output do teste — agora com theme do Maestro aplicado.</strong></p>
 
   <footer>
-    Artefato gerado em <code>vibework-knowledge</code> · POC · 2026-05-17
+    <span class="accent">vibework-knowledge</span> · artifact published 2026-05-17 · maestro-theme snapshot
   </footer>
 </main>
 
 <script>
 (function() {
-  // SHA-256 hash da senha. Senha em texto NÃO fica no JS.
   const EXPECTED_HASH = '9fdddba045ac177967b9f8494888da828967329e2b32ba1732daeb93a35aee9c';
   const STORAGE_KEY = 'vw-artifact-poc-skill-design';
 
@@ -163,11 +440,7 @@
     content.style.display = 'block';
   }
 
-  // Auto-unlock se já autenticou nesta sessão
-  if (sessionStorage.getItem(STORAGE_KEY) === 'ok') {
-    unlock();
-    return;
-  }
+  if (sessionStorage.getItem(STORAGE_KEY) === 'ok') { unlock(); return; }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -177,7 +450,7 @@
       sessionStorage.setItem(STORAGE_KEY, 'ok');
       unlock();
     } else {
-      err.textContent = 'Senha incorreta';
+      err.textContent = '✗ senha incorreta';
       input.value = '';
       input.focus();
     }
