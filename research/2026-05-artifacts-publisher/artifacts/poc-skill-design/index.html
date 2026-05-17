@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POC — artifacts-publisher</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --fg: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --border: #30363d;
+    --card: #161b22;
+    --code-bg: #1f2428;
+    --success: #3fb950;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif; line-height: 1.6; }
+
+  /* Gate styles */
+  #gate { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
+  #gate .gate-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 40px; max-width: 420px; width: 100%; text-align: center; }
+  #gate h1 { font-size: 1.4rem; margin: 0 0 8px; }
+  #gate p { color: var(--muted); margin: 0 0 24px; font-size: 0.9rem; }
+  #gate input { width: 100%; padding: 12px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--fg); font-size: 1rem; font-family: ui-monospace, monospace; outline: none; transition: border-color 0.2s; }
+  #gate input:focus { border-color: var(--accent); }
+  #gate button { width: 100%; margin-top: 12px; padding: 12px; background: var(--accent); color: #0d1117; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+  #gate button:hover { opacity: 0.9; }
+  #gate .err { color: #f85149; font-size: 0.85rem; margin-top: 12px; min-height: 1.2em; }
+
+  /* Content styles */
+  #content { display: none; max-width: 880px; margin: 0 auto; padding: 60px 32px; }
+  #content header { border-bottom: 1px solid var(--border); padding-bottom: 24px; margin-bottom: 32px; }
+  #content h1 { font-size: 2.2rem; margin: 0 0 12px; letter-spacing: -0.02em; }
+  #content .meta { color: var(--muted); font-size: 0.9rem; display: flex; gap: 16px; flex-wrap: wrap; }
+  #content .meta span::before { content: "•"; margin-right: 16px; color: var(--border); }
+  #content .meta span:first-child::before { content: ""; margin-right: 0; }
+  #content h2 { font-size: 1.5rem; margin-top: 48px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  #content h3 { font-size: 1.15rem; margin-top: 28px; margin-bottom: 12px; color: var(--accent); }
+  #content p { margin: 0 0 16px; }
+  #content ul, #content ol { padding-left: 24px; }
+  #content li { margin-bottom: 6px; }
+  #content code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, "SF Mono", monospace; font-size: 0.9em; }
+  #content pre { background: var(--code-bg); border: 1px solid var(--border); padding: 16px; border-radius: 8px; overflow-x: auto; font-size: 0.85rem; }
+  #content pre code { background: transparent; padding: 0; }
+  #content table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  #content th, #content td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  #content th { background: var(--card); font-weight: 600; }
+  #content .pill { display: inline-block; padding: 2px 10px; background: var(--card); border: 1px solid var(--border); border-radius: 999px; font-size: 0.8rem; color: var(--muted); }
+  #content .status { display: inline-block; padding: 4px 12px; background: rgba(63, 185, 80, 0.15); color: var(--success); border-radius: 6px; font-size: 0.85rem; font-weight: 500; }
+  #content footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; text-align: center; }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="gate">
+  <div class="gate-card">
+    <h1>Conteúdo protegido</h1>
+    <p>Insira a senha compartilhada pelo time.</p>
+    <form id="gate-form">
+      <input type="password" id="gate-input" placeholder="senha" autocomplete="off" autofocus>
+      <button type="submit">Acessar</button>
+      <div class="err" id="gate-err"></div>
+    </form>
+  </div>
+</div>
+
+<!-- CONTENT (hidden until gate passes) -->
+<main id="content">
+  <header>
+    <h1>POC — Skill <code>artifacts-publisher</code></h1>
+    <div class="meta">
+      <span><span class="pill">2026-05-17</span></span>
+      <span>Gerado por: Claude Code</span>
+      <span>Sessão: vw2-root-cc</span>
+      <span class="status">POC validada</span>
+    </div>
+  </header>
+
+  <h2>Contexto</h2>
+  <p>Felipe compartilhou print de documentação do repo <code>blessy-knowledge</code> mostrando padrão de artefatos navegáveis: cada estudo gera uma pasta <code>artifacts/</code> com <code>index.html</code> publicado no GitHub Pages com password gate. Workflow: gera Markdown (raw, edição/IA) + HTML (consumo, visualização) e publica.</p>
+
+  <h2>Objetivo</h2>
+  <p>Adaptar esse padrão para o VibeworkV2 como skill global reutilizável, com dois modos:</p>
+  <ul>
+    <li><strong>Simple:</strong> template básico, rápido, tipografia limpa (esta página é um exemplo)</li>
+    <li><strong>Full:</strong> chama a skill <code>visual-explainer</code> para HTML "fodástico"</li>
+  </ul>
+
+  <h2>Decisões tomadas</h2>
+  <table>
+    <thead><tr><th>Decisão</th><th>Escolha</th></tr></thead>
+    <tbody>
+      <tr><td>Onde mora</td><td><code>docs/research/YYYY-MM-tema/artifacts/</code></td></tr>
+      <tr><td>Password gate</td><td>Client-side JS hash (SHA-256)</td></tr>
+      <tr><td>Renderização</td><td>Dois modos: <code>--simple</code> e <code>--full</code></td></tr>
+      <tr><td>Repo destino</td><td><code>vibework-knowledge</code> (dedicado)</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Arquitetura da skill</h2>
+<pre><code>~/.claude/skills/artifacts-publisher/
+├── SKILL.md                        ← orquestração
+├── templates/
+│   ├── artifact-readme.md.tpl
+│   ├── password-gate.html.tpl
+│   └── simple-page.html.tpl
+└── scripts/
+    ├── publish.sh
+    ├── gate.sh
+    └── slugify.sh</code></pre>
+
+  <h2>Flags propostas</h2>
+  <ul>
+    <li><code>(sem flag)</code> → modo simple (default)</li>
+    <li><code>--full</code> → chama visual-explainer</li>
+    <li><code>--password &lt;senha&gt;</code> → define senha do gate</li>
+    <li><code>--no-gate</code> → publica público</li>
+    <li><code>--slug &lt;nome&gt;</code> → override do slug</li>
+  </ul>
+
+  <h2>Pipeline comum</h2>
+  <ol>
+    <li>Gera <code>raw.md</code></li>
+    <li>Gera <code>index.html</code> (simple ou full)</li>
+    <li>Aplica password gate JS</li>
+    <li>Cria/atualiza <code>artifacts/README.md</code></li>
+    <li>Commit + push no repo</li>
+    <li>Habilita Pages se necessário</li>
+    <li>Retorna URL final</li>
+  </ol>
+
+  <h2>Status</h2>
+  <p>POC manual em execução para validar o fluxo end-to-end antes de codificar a skill. <strong>Esta página é o output do teste.</strong></p>
+
+  <footer>
+    Artefato gerado em <code>vibework-knowledge</code> · POC · 2026-05-17
+  </footer>
+</main>
+
+<script>
+(function() {
+  // SHA-256 hash da senha. Senha em texto NÃO fica no JS.
+  const EXPECTED_HASH = '9fdddba045ac177967b9f8494888da828967329e2b32ba1732daeb93a35aee9c';
+  const STORAGE_KEY = 'vw-artifact-poc-skill-design';
+
+  const gate = document.getElementById('gate');
+  const content = document.getElementById('content');
+  const form = document.getElementById('gate-form');
+  const input = document.getElementById('gate-input');
+  const err = document.getElementById('gate-err');
+
+  async function sha256(text) {
+    const buf = new TextEncoder().encode(text);
+    const hash = await crypto.subtle.digest('SHA-256', buf);
+    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  function unlock() {
+    gate.style.display = 'none';
+    content.style.display = 'block';
+  }
+
+  // Auto-unlock se já autenticou nesta sessão
+  if (sessionStorage.getItem(STORAGE_KEY) === 'ok') {
+    unlock();
+    return;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    err.textContent = '';
+    const hash = await sha256(input.value);
+    if (hash === EXPECTED_HASH) {
+      sessionStorage.setItem(STORAGE_KEY, 'ok');
+      unlock();
+    } else {
+      err.textContent = 'Senha incorreta';
+      input.value = '';
+      input.focus();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
