@@ -1,0 +1,34 @@
+[
+  {
+    "title": "POC — artifacts-publisher",
+    "tema": "2026-05-artifacts-publisher",
+    "tags": [],
+    "date": "2026-05-17",
+    "snippet": "POC — Design da Skill artifacts-publisher Contexto Felipe compartilhou print de documentação do repo blessy-knowledge mostrando padrão de artefatos navegáveis: cada estudo gera uma pasta artifacts/ com index.html publicado no GitHub Pages com password gate. Workflow: gera Markdown raw, edição/IA + H",
+    "url": "research/2026-05-artifacts-publisher/artifacts/poc-skill-design/"
+  },
+  {
+    "title": "Skill Cristalizada Smoke Final",
+    "tema": "2026-05-artifacts-publisher",
+    "tags": [],
+    "date": "2026-05-17",
+    "snippet": "Smoke Test — artifacts-publisher Este é um teste de fumaça da skill artifacts-publisher. Objetivo Validar que o pipeline funciona end-to-end em modo --dry-run. Checklist - Theme do Maestro capturado - Markdown convertido pra HTML - Gate AES-GCM aplicado encrypt.mjs roda - Index do repo regenerado - ",
+    "url": "research/2026-05-artifacts-publisher/artifacts/skill-cristalizada-smoke-final/"
+  },
+  {
+    "title": "POC FULL — artifacts-publisher",
+    "tema": "2026-05-artifacts-publisher",
+    "tags": [],
+    "date": "2026-05-17",
+    "snippet": "POC FULL — Skill artifacts-publisher Demonstração do modo --full da skill. Mesmo conteúdo do POC Simple + interatividade pesada. Features adicionadas vs Simple - Sidebar TOC com scroll-spy - Tabs navegáveis Overview / Architecture / Design / Decisions - Mermaid diagrams flowchart + sequence - Tabela",
+    "url": "research/2026-05-artifacts-publisher/artifacts/poc-skill-design-full/"
+  },
+  {
+    "title": "Sistema de Design Validacao v2",
+    "tema": "2026-05-design-system",
+    "tags": [],
+    "date": "2026-05-17",
+    "snippet": "Sistema de Design — Validação v2 A nova arquitetura de design publica conhecimento como wiki navegável ao invés de arquivos soltos. Esta página é o primeiro teste da v2 da skill. Por que mudou da v1 A v1 era boa pra publicar páginas isoladas, mas conhecimento isolado vira link perdido em pasta. A v2",
+    "url": "research/2026-05-design-system/artifacts/sistema-de-design-validacao-v2/"
+  }
+]
