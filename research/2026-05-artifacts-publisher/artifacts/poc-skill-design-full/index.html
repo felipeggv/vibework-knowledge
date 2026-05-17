@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POC FULL — artifacts-publisher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --bg-main: #0c0e0c;
+    --bg-sidebar: #0f100f;
+    --bg-activity: #141415;
+    --border: #111311;
+    --text-main: #f2f2c0;
+    --text-dim: #cec8ba;
+    --accent: #5b675b;
+    --accent-bright: #7a8a7a;
+    --accent-dim: #262121;
+    --accent-text: #ffffff;
+    --success: #bed78e;
+    --warning: #d0a795;
+    --error: #ff5555;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg-main); color: var(--text-main); font-family: var(--font-mono); font-size: 13.5px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+
+  /* ============ GATE ============ */
+  #gate { display:flex; align-items:center; justify-content:center; min-height:100vh; padding:24px; background: radial-gradient(ellipse at center, rgba(91,103,91,0.08) 0%, transparent 60%), var(--bg-main); }
+  #gate .gate-card { background: var(--bg-sidebar); border: 1px solid var(--border); padding: 40px 36px; max-width: 440px; width: 100%; box-shadow: 0 0 0 1px var(--border), 0 24px 60px rgba(0,0,0,0.5); }
+  #gate .badge { display:inline-block; padding:2px 8px; background:var(--accent-dim); color:var(--text-dim); font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase; border:1px solid var(--border); margin-bottom:16px; }
+  #gate h1 { font-size:1.15rem; margin:0 0 6px; }
+  #gate p.lead { color:var(--text-dim); font-size:0.85rem; margin:0 0 24px; }
+  #gate label { display:block; color:var(--text-dim); font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; }
+  #gate input { width:100%; padding:10px 12px; background:var(--bg-main); border:1px solid var(--border); color:var(--text-main); font:inherit; font-size:0.95rem; outline:none; }
+  #gate input:focus { border-color:var(--accent); }
+  #gate button { width:100%; margin-top:14px; padding:10px; background:var(--accent); color:var(--accent-text); border:1px solid var(--accent); font:inherit; cursor:pointer; letter-spacing:0.05em; }
+  #gate button:hover { background:var(--accent-bright); border-color:var(--accent-bright); }
+  #gate .err { color:var(--error); font-size:0.8rem; margin-top:12px; min-height:1.2em; }
+  #gate .footnote { margin-top:28px; padding-top:16px; border-top:1px solid var(--border); color:var(--text-dim); font-size:0.7rem; line-height:1.6; }
+  #gate .prompt::before { content:"$ "; color:var(--accent); }
+
+  /* ============ APP LAYOUT ============ */
+  #app { display:none; min-height:100vh; }
+  .app-grid { display:grid; grid-template-columns: 240px 1fr; min-height:100vh; }
+  @media (max-width: 900px) { .app-grid { grid-template-columns: 1fr; } .sidebar { display:none; } }
+
+  /* ============ SIDEBAR (TOC) ============ */
+  .sidebar { background:var(--bg-sidebar); border-right:1px solid var(--border); padding: 32px 20px; position:sticky; top:0; max-height:100vh; overflow-y:auto; }
+  .sidebar .brand { font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-dim); margin-bottom: 4px; }
+  .sidebar .brand-name { font-size:0.95rem; font-weight:700; color:var(--text-main); margin-bottom:24px; }
+  .sidebar .brand-name .accent { color:var(--accent); }
+  .sidebar .toc-title { font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-dim); margin: 20px 0 10px; }
+  .toc { list-style:none; padding:0; margin:0; }
+  .toc li { margin:0; }
+  .toc a { display:block; padding:6px 10px; color:var(--text-dim); text-decoration:none; font-size:0.82rem; border-left:2px solid transparent; transition: all 0.15s; }
+  .toc a:hover { color:var(--text-main); background:var(--accent-dim); }
+  .toc a.active { color:var(--accent); border-left-color:var(--accent); background:var(--accent-dim); }
+
+  .kbd-hint { margin-top:auto; padding:12px; border:1px solid var(--border); background:var(--bg-main); font-size:0.7rem; color:var(--text-dim); }
+  .kbd { display:inline-block; padding:1px 5px; background:var(--accent-dim); border:1px solid var(--border); border-radius:2px; font-size:0.65rem; color:var(--text-main); }
+
+  /* ============ MAIN ============ */
+  main { padding: 40px 56px 80px; max-width: 980px; }
+  @media (max-width: 900px) { main { padding: 32px 24px 60px; } }
+
+  /* ============ HEADER ============ */
+  .doc-header { border-bottom:1px solid var(--border); padding-bottom:24px; margin-bottom:32px; }
+  .crumb { color:var(--text-dim); font-size:0.72rem; letter-spacing:0.08em; margin-bottom:12px; text-transform:uppercase; }
+  .crumb .accent { color:var(--accent); }
+  h1 { font-size:1.8rem; font-weight:700; margin:0 0 12px; letter-spacing:-0.02em; }
+  .meta-bar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom: 16px; }
+  .pill { display:inline-block; padding:2px 10px; background:var(--accent-dim); border:1px solid var(--border); color:var(--text-dim); font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; }
+  .status { padding:3px 10px; background:rgba(190,215,142,0.12); border:1px solid var(--success); color:var(--success); font-size:0.7rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; }
+  .header-actions { display:flex; gap:8px; }
+  .btn-sm { padding:5px 12px; background:transparent; border:1px solid var(--border); color:var(--text-dim); font:inherit; font-size:0.75rem; cursor:pointer; letter-spacing:0.05em; }
+  .btn-sm:hover { border-color:var(--accent); color:var(--text-main); }
+  .btn-sm.active { background:var(--accent-dim); border-color:var(--accent); color:var(--text-main); }
+
+  /* ============ TABS ============ */
+  .tabs { display:flex; gap:0; border-bottom:1px solid var(--border); margin-bottom:24px; overflow-x:auto; }
+  .tab { padding:10px 18px; background:transparent; border:none; border-bottom:2px solid transparent; color:var(--text-dim); font:inherit; font-size:0.82rem; cursor:pointer; letter-spacing:0.05em; text-transform:uppercase; transition: all 0.15s; white-space:nowrap; }
+  .tab:hover { color:var(--text-main); }
+  .tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .tab-panel { display:none; animation: fadeIn 0.3s ease-out; }
+  .tab-panel.active { display:block; }
+  @keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+
+  /* ============ SECTIONS ============ */
+  section { margin-bottom:48px; scroll-margin-top:20px; }
+  h2 { font-size:1.05rem; font-weight:600; margin:0 0 14px; padding-bottom:8px; border-bottom:1px solid var(--border); text-transform:uppercase; letter-spacing:0.06em; cursor:pointer; user-select:none; display:flex; align-items:center; gap:8px; }
+  h2::before { content:"▸"; color:var(--accent); transition: transform 0.2s; }
+  h2.collapsed::before { transform: rotate(-90deg); }
+  h2.collapsed + .section-body { display:none; }
+  h3 { font-size:0.92rem; font-weight:600; margin: 22px 0 10px; color:var(--text-dim); letter-spacing:0.04em; }
+  p { margin: 0 0 14px; }
+
+  /* ============ TABLES ============ */
+  .table-wrap { border:1px solid var(--border); margin: 14px 0; }
+  .table-filter { display:flex; gap:0; border-bottom:1px solid var(--border); background:var(--bg-sidebar); }
+  .table-filter input { flex:1; padding:8px 12px; background:transparent; border:none; color:var(--text-main); font:inherit; font-size:0.82rem; outline:none; }
+  .table-filter input::placeholder { color:var(--text-dim); }
+  .table-filter .count { padding:8px 12px; color:var(--text-dim); font-size:0.75rem; border-left:1px solid var(--border); }
+  table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+  th, td { text-align:left; padding:9px 14px; border-bottom:1px solid var(--border); }
+  th { background:var(--bg-activity); color:var(--text-dim); font-weight:600; font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; border-bottom:1px solid var(--accent); cursor:pointer; user-select:none; }
+  th:hover { color:var(--text-main); }
+  th .sort-ind { color:var(--accent); margin-left:4px; }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:var(--accent-dim); }
+  tr.hidden { display:none; }
+
+  /* ============ CODE ============ */
+  .code-block { position:relative; margin: 14px 0; }
+  .code-block pre { background:var(--bg-sidebar); border:1px solid var(--border); padding:16px 18px; overflow-x:auto; font-size:0.8rem; line-height:1.55; margin:0; }
+  .code-block .copy-btn { position:absolute; top:8px; right:8px; padding:4px 10px; background:var(--bg-activity); border:1px solid var(--border); color:var(--text-dim); font:inherit; font-size:0.7rem; cursor:pointer; opacity:0; transition: opacity 0.15s; letter-spacing:0.05em; text-transform:uppercase; }
+  .code-block:hover .copy-btn { opacity:1; }
+  .copy-btn:hover { color:var(--text-main); border-color:var(--accent); }
+  .copy-btn.copied { color:var(--success); border-color:var(--success); }
+  code { background:var(--bg-sidebar); border:1px solid var(--border); padding:1px 6px; font-size:0.85em; }
+
+  /* ============ COLOR SWATCHES ============ */
+  .swatches { display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:10px; margin: 16px 0; }
+  .swatch { border:1px solid var(--border); padding:12px; cursor:pointer; transition: all 0.15s; background:var(--bg-sidebar); }
+  .swatch:hover { border-color:var(--accent); transform: translateY(-2px); }
+  .swatch .chip { width:100%; height:32px; border:1px solid var(--border); margin-bottom:8px; }
+  .swatch .name { font-size:0.72rem; color:var(--text-dim); letter-spacing:0.05em; text-transform:uppercase; }
+  .swatch .hex { font-size:0.8rem; color:var(--text-main); margin-top:2px; }
+  .swatch.copied { border-color:var(--success); }
+  .swatch.copied .hex { color:var(--success); }
+
+  /* ============ MERMAID ============ */
+  .mermaid-wrap { background:var(--bg-sidebar); border:1px solid var(--border); padding:20px; margin:14px 0; overflow-x:auto; }
+  .mermaid { display:flex; justify-content:center; }
+
+  /* ============ COMMAND PALETTE ============ */
+  #palette-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index:100; align-items:flex-start; justify-content:center; padding-top:80px; }
+  #palette-bg.open { display:flex; }
+  #palette { width:100%; max-width:520px; background:var(--bg-sidebar); border:1px solid var(--accent); box-shadow: 0 24px 60px rgba(0,0,0,0.7); }
+  #palette input { width:100%; padding:14px 18px; background:transparent; border:none; border-bottom:1px solid var(--border); color:var(--text-main); font:inherit; font-size:0.95rem; outline:none; }
+  #palette-results { max-height:340px; overflow-y:auto; }
+  #palette-results .item { padding:10px 18px; cursor:pointer; display:flex; align-items:center; gap:10px; color:var(--text-dim); font-size:0.85rem; }
+  #palette-results .item:hover, #palette-results .item.selected { background:var(--accent-dim); color:var(--text-main); }
+  #palette-results .item::before { content:"›"; color:var(--accent); }
+
+  /* ============ TIMELINE ============ */
+  .timeline { position:relative; padding-left:24px; border-left:1px solid var(--border); margin: 16px 0; }
+  .timeline-item { padding-bottom:18px; position:relative; }
+  .timeline-item::before { content:""; position:absolute; left:-29px; top:5px; width:10px; height:10px; background:var(--bg-main); border:2px solid var(--accent); border-radius:50%; }
+  .timeline-item.done::before { background:var(--success); border-color:var(--success); }
+  .timeline-item .ts { font-size:0.7rem; color:var(--text-dim); letter-spacing:0.05em; text-transform:uppercase; margin-bottom:2px; }
+  .timeline-item .title { font-weight:600; color:var(--text-main); font-size:0.88rem; }
+  .timeline-item .desc { font-size:0.82rem; color:var(--text-dim); margin-top:2px; }
+
+  /* ============ STATS GRID ============ */
+  .stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:8px; margin: 16px 0; }
+  .stat { padding:14px 16px; background:var(--bg-sidebar); border:1px solid var(--border); }
+  .stat .label { font-size:0.68rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; }
+  .stat .value { font-size:1.4rem; font-weight:700; color:var(--text-main); }
+  .stat .value.success { color:var(--success); }
+  .stat .value.accent { color:var(--accent); }
+  .stat .delta { font-size:0.72rem; color:var(--text-dim); margin-top:2px; }
+
+  /* ============ FOOTER ============ */
+  .doc-footer { margin-top:60px; padding-top:20px; border-top:1px solid var(--border); color:var(--text-dim); font-size:0.75rem; text-align:center; letter-spacing:0.05em; }
+  .doc-footer .accent { color:var(--accent); }
+
+  /* Toast */
+  .toast { position:fixed; bottom:24px; right:24px; padding:10px 16px; background:var(--bg-sidebar); border:1px solid var(--success); color:var(--success); font-size:0.82rem; opacity:0; transform: translateY(20px); transition: all 0.25s; pointer-events:none; z-index:200; }
+  .toast.show { opacity:1; transform: translateY(0); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width:10px; height:10px; }
+  ::-webkit-scrollbar-track { background: var(--bg-sidebar); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="gate-card">
+    <div class="badge">protected · full edition</div>
+    <h1>Acesso restrito</h1>
+    <p class="lead">Versão interativa. Senha compartilhada pelo time.</p>
+    <form id="gate-form">
+      <label for="gate-input">senha</label>
+      <input type="password" id="gate-input" autocomplete="off" autofocus spellcheck="false">
+      <button type="submit">› ACESSAR</button>
+      <div class="err" id="gate-err"></div>
+    </form>
+    <div class="footnote">
+      <div class="prompt">artifacts-publisher · mode=full · interactive</div>
+      Pressione <span class="kbd">⌘ K</span> dentro do doc para abrir a palette.
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+<div class="app-grid">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">vibework-knowledge</div>
+    <div class="brand-name">poc<span class="accent">.</span>full</div>
+
+    <div class="toc-title">Seções</div>
+    <ul class="toc" id="toc">
+      <li><a href="#contexto" class="active">Contexto</a></li>
+      <li><a href="#arquitetura">Arquitetura</a></li>
+      <li><a href="#fluxo">Fluxo</a></li>
+      <li><a href="#theme">Theme</a></li>
+      <li><a href="#decisoes">Decisões</a></li>
+      <li><a href="#timeline">Timeline</a></li>
+      <li><a href="#metricas">Métricas</a></li>
+    </ul>
+
+    <div class="toc-title">Atalhos</div>
+    <div class="kbd-hint">
+      <div><span class="kbd">⌘ K</span> command palette</div>
+      <div style="margin-top:4px"><span class="kbd">⌘ /</span> toggle sections</div>
+      <div style="margin-top:4px"><span class="kbd">esc</span> fechar palette</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+    <header class="doc-header">
+      <div class="crumb">vibework-knowledge <span class="accent">›</span> research <span class="accent">›</span> 2026-05-artifacts-publisher <span class="accent">›</span> poc-skill-design-full</div>
+      <h1>POC FULL — Skill <code>artifacts-publisher</code></h1>
+      <div class="meta-bar">
+        <span class="pill">2026-05-17</span>
+        <span class="pill">mode: full</span>
+        <span class="pill">interactive</span>
+        <span class="status">live demo</span>
+      </div>
+      <div class="header-actions">
+        <button class="btn-sm" id="collapse-all">▾ collapse all</button>
+        <button class="btn-sm" id="expand-all">▸ expand all</button>
+        <button class="btn-sm" onclick="openPalette()">⌘K palette</button>
+        <a class="btn-sm" href="../poc-skill-design/" style="text-decoration:none;display:inline-flex;align-items:center">← ver simple</a>
+      </div>
+    </header>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" data-tab="overview">Overview</button>
+      <button class="tab" data-tab="architecture">Architecture</button>
+      <button class="tab" data-tab="design">Design tokens</button>
+      <button class="tab" data-tab="decisions">Decisions</button>
+    </div>
+
+    <!-- TAB: OVERVIEW -->
+    <div class="tab-panel active" data-panel="overview">
+
+      <section id="contexto">
+        <h2>Contexto</h2>
+        <div class="section-body">
+          <p>Este é o <strong>modo FULL</strong> da skill <code>artifacts-publisher</code>. Pega tudo do Simple e adiciona: tabs navegáveis, diagramas Mermaid, tabela de tokens com swatches clicáveis, sidebar TOC com scroll-spy, command palette <span class="kbd">⌘K</span>, code copy, filtros, animações e collapse de seções.</p>
+          <div class="stats">
+            <div class="stat"><div class="label">Tabs</div><div class="value accent">4</div><div class="delta">overview/arch/design/decisions</div></div>
+            <div class="stat"><div class="label">Seções</div><div class="value">7</div><div class="delta">colapsáveis individualmente</div></div>
+            <div class="stat"><div class="label">Tokens</div><div class="value">12</div><div class="delta">click pra copiar</div></div>
+            <div class="stat"><div class="label">Status</div><div class="value success">LIVE</div><div class="delta">interativo end-to-end</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="arquitetura">
+        <h2>Arquitetura da skill</h2>
+        <div class="section-body">
+          <div class="code-block">
+            <button class="copy-btn">copy</button>
+<pre><code>~/.claude/skills/artifacts-publisher/
+├── SKILL.md
+├── templates/
+│   ├── artifact-readme.md.tpl
+│   ├── password-gate.html.tpl
+│   ├── simple-page.html.tpl
+│   ├── full-page.html.tpl       ← este modo
+│   └── theme-snapshot.css.tpl
+└── scripts/
+    ├── publish.sh
+    ├── gate.sh
+    ├── theme-fetch.sh
+    └── slugify.sh</code></pre>
+          </div>
+          <h3>Quando usar cada modo</h3>
+          <div class="table-wrap">
+            <div class="table-filter">
+              <input type="text" placeholder="filtrar..." data-filter="modes">
+              <span class="count" id="count-modes">3 linhas</span>
+            </div>
+            <table data-rows="modes">
+              <thead><tr><th>Modo</th><th>Quando usar</th><th>Tempo</th><th>Tamanho HTML</th></tr></thead>
+              <tbody>
+                <tr><td><code>--simple</code></td><td>Relatórios diários, decisões rápidas, briefings</td><td>&lt; 5s</td><td>~20 KB</td></tr>
+                <tr><td><code>--full</code></td><td>Estudos profundos, handoffs, microsites</td><td>~30s</td><td>~80-200 KB</td></tr>
+                <tr><td><code>--no-gate</code></td><td>Conteúdo público (releases, docs OSS)</td><td>~3s</td><td>~15 KB</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="fluxo">
+        <h2>Fluxo de publicação</h2>
+        <div class="section-body">
+          <div class="mermaid-wrap">
+            <div class="mermaid">
+flowchart LR
+    A[Input do usuário] --> B{Modo?}
+    B -->|--simple| C[Template Simple]
+    B -->|--full| D[Template Full + visual-explainer]
+    C --> E[Snapshot theme Maestro]
+    D --> E
+    E --> F[Inject CSS vars]
+    F --> G{Gate?}
+    G -->|sim| H[Aplica password gate JS]
+    G -->|--no-gate| I[Publica público]
+    H --> J[Commit + Push]
+    I --> J
+    J --> K[gh api Pages]
+    K --> L[Retorna URL]
+
+    style A fill:#262121,stroke:#5b675b,color:#f2f2c0
+    style E fill:#0f100f,stroke:#5b675b,color:#bed78e
+    style L fill:#262121,stroke:#bed78e,color:#bed78e
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- TAB: ARCHITECTURE -->
+    <div class="tab-panel" data-panel="architecture">
+      <section>
+        <h2>Estrutura de Diretórios</h2>
+        <div class="section-body">
+          <p>Cada artefato vive isolado, com seu próprio <code>index.html</code> e <code>raw.md</code>:</p>
+          <div class="mermaid-wrap">
+            <div class="mermaid">
+graph TD
+    R[vibework-knowledge] --> RES[research/]
+    RES --> TEMA[YYYY-MM-tema/]
+    TEMA --> ART[artifacts/]
+    ART --> README[README.md<br/>origem, data, URLs]
+    ART --> SLUG1[slug-1/]
+    ART --> SLUG2[slug-2/]
+    SLUG1 --> H1[index.html]
+    SLUG1 --> R1[raw.md]
+    SLUG1 --> AS1[assets/]
+    SLUG2 --> H2[index.html]
+    SLUG2 --> R2[raw.md]
+
+    style R fill:#262121,stroke:#5b675b,color:#f2f2c0
+    style ART fill:#0f100f,stroke:#5b675b,color:#bed78e
+    style H1 fill:#141415,stroke:#bed78e,color:#bed78e
+    style H2 fill:#141415,stroke:#bed78e,color:#bed78e
+            </div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <h2>Sequência de Publicação</h2>
+        <div class="section-body">
+          <div class="mermaid-wrap">
+            <div class="mermaid">
+sequenceDiagram
+    participant U as Usuário
+    participant S as Skill
+    participant M as maestro-cli
+    participant G as git/gh
+    participant P as GitHub Pages
+
+    U->>S: /global:skills:artifacts-publisher
+    S->>M: settings get customThemeColors
+    M-->>S: { bgMain, accent, ... }
+    S->>S: render HTML + inject CSS
+    S->>S: aplica password gate
+    S->>G: git add + commit + push
+    G-->>S: pushed
+    S->>G: gh api POST /pages
+    G-->>P: enable Pages
+    S->>P: poll /pages/builds/latest
+    P-->>S: status: built
+    S-->>U: URL pública
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- TAB: DESIGN -->
+    <div class="tab-panel" data-panel="design">
+      <section id="theme">
+        <h2>Tokens do Maestro</h2>
+        <div class="section-body">
+          <p>Snapshot capturado em <strong>2026-05-17 06:54</strong> via <code>maestro-cli settings get customThemeColors</code>. Clique num swatch pra copiar o hex.</p>
+          <div class="swatches" id="swatches"></div>
+        </div>
+      </section>
+      <section>
+        <h2>Tipografia</h2>
+        <div class="section-body">
+          <p>Família única: <strong>JetBrains Mono</strong> 400/500/600/700, via Google Fonts.</p>
+          <div class="code-block">
+            <button class="copy-btn">copy</button>
+<pre><code>--font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+--font-size: 13.5px;
+--line-height: 1.65;</code></pre>
+          </div>
+          <h3>Escala</h3>
+          <div style="border:1px solid var(--border); padding:20px; background:var(--bg-sidebar);">
+            <div style="font-size:1.8rem; margin-bottom:8px;">H1 — 1.8rem · 700</div>
+            <div style="font-size:1.05rem; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.06em;">H2 — 1.05rem · 600 · uppercase</div>
+            <div style="font-size:0.92rem; margin-bottom:6px; color:var(--text-dim);">H3 — 0.92rem · 600 · dim</div>
+            <div style="font-size:0.875rem;">Body — 13.5px · 400 · line-height 1.65</div>
+            <div style="font-size:0.7rem; margin-top:6px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim);">Pill — 0.7rem · 600 · uppercase · tracking-wide</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- TAB: DECISIONS -->
+    <div class="tab-panel" data-panel="decisions">
+      <section id="decisoes">
+        <h2>Decisões registradas</h2>
+        <div class="section-body">
+          <div class="table-wrap">
+            <div class="table-filter">
+              <input type="text" placeholder="filtrar decisões..." data-filter="decisions">
+              <span class="count" id="count-decisions">6 linhas</span>
+            </div>
+            <table data-rows="decisions">
+              <thead><tr><th>#</th><th>Decisão</th><th>Escolha</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>D1</td><td>Onde mora</td><td><code>docs/research/YYYY-MM-tema/artifacts/</code></td><td><span class="status">aprovada</span></td></tr>
+                <tr><td>D2</td><td>Password gate</td><td>Client-side SHA-256 (POC) / AES-GCM (skill)</td><td><span class="status">aprovada</span></td></tr>
+                <tr><td>D3</td><td>Renderização</td><td><code>--simple</code> + <code>--full</code></td><td><span class="status">aprovada</span></td></tr>
+                <tr><td>D4</td><td>Repo destino</td><td><code>vibework-knowledge</code></td><td><span class="status">aprovada</span></td></tr>
+                <tr><td>D5</td><td>Theme</td><td>Snapshot Maestro (estratégia A)</td><td><span class="status">aprovada</span></td></tr>
+                <tr><td>D6</td><td>Fonte</td><td>JetBrains Mono via Google Fonts</td><td><span class="status">aprovada</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      <section id="timeline">
+        <h2>Timeline da POC</h2>
+        <div class="section-body">
+          <div class="timeline">
+            <div class="timeline-item done">
+              <div class="ts">2026-05-17 · t0</div>
+              <div class="title">Identificação do padrão Blessy</div>
+              <div class="desc">Print + áudio explicando workflow Markdown→HTML→Pages</div>
+            </div>
+            <div class="timeline-item done">
+              <div class="ts">2026-05-17 · t+10min</div>
+              <div class="title">Design da skill</div>
+              <div class="desc">Decisões D1-D4 fechadas, escolha de modos simple/full</div>
+            </div>
+            <div class="timeline-item done">
+              <div class="ts">2026-05-17 · t+25min</div>
+              <div class="title">POC publicado (versão genérica)</div>
+              <div class="desc">Repo criado, Pages habilitado, primeiro artefato no ar</div>
+            </div>
+            <div class="timeline-item done">
+              <div class="ts">2026-05-17 · t+40min</div>
+              <div class="title">Theme Maestro aplicado</div>
+              <div class="desc">Snapshot via maestro-cli, terminal/fallout aesthetic ativo</div>
+            </div>
+            <div class="timeline-item">
+              <div class="ts">2026-05-17 · t+55min · agora</div>
+              <div class="title">POC FULL interativo</div>
+              <div class="desc">Tabs, Mermaid, swatches, palette ⌘K, scroll-spy, copy buttons</div>
+            </div>
+            <div class="timeline-item">
+              <div class="ts">próximo</div>
+              <div class="title">Cristalizar skill</div>
+              <div class="desc">Criar ~/.claude/skills/artifacts-publisher/ com templates e scripts</div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="metricas">
+        <h2>Métricas da POC</h2>
+        <div class="section-body">
+          <div class="stats">
+            <div class="stat"><div class="label">Commits</div><div class="value">3</div><div class="delta">main branch</div></div>
+            <div class="stat"><div class="label">Pages builds</div><div class="value">4</div><div class="delta">média ~25s cada</div></div>
+            <div class="stat"><div class="label">Artefatos</div><div class="value accent">2</div><div class="delta">simple + full</div></div>
+            <div class="stat"><div class="label">Tempo total</div><div class="value">~55 min</div><div class="delta">design → live</div></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="doc-footer">
+      <span class="accent">vibework-knowledge</span> · poc full · maestro-theme snapshot 2026-05-17 · gh-pages
+    </footer>
+  </main>
+
+</div>
+</div>
+
+<!-- COMMAND PALETTE -->
+<div id="palette-bg" onclick="closePalette(event)">
+  <div id="palette" onclick="event.stopPropagation()">
+    <input type="text" id="palette-input" placeholder="ir para seção, ação..." autocomplete="off">
+    <div id="palette-results"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">copiado</div>
+
+<script>
+/* =========================
+   GATE
+   ========================= */
+(function() {
+  const EXPECTED_HASH = '9fdddba045ac177967b9f8494888da828967329e2b32ba1732daeb93a35aee9c';
+  const KEY = 'vw-artifact-poc-skill-design-full';
+  const gate = document.getElementById('gate');
+  const app = document.getElementById('app');
+  const form = document.getElementById('gate-form');
+  const input = document.getElementById('gate-input');
+  const err = document.getElementById('gate-err');
+
+  async function sha256(t) {
+    const buf = new TextEncoder().encode(t);
+    const h = await crypto.subtle.digest('SHA-256', buf);
+    return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+  function unlock() {
+    gate.style.display = 'none';
+    app.style.display = 'block';
+    init();
+  }
+  if (sessionStorage.getItem(KEY) === 'ok') { unlock(); return; }
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    err.textContent = '';
+    const h = await sha256(input.value);
+    if (h === EXPECTED_HASH) { sessionStorage.setItem(KEY, 'ok'); unlock(); }
+    else { err.textContent = '✗ senha incorreta'; input.value = ''; input.focus(); }
+  });
+})();
+
+/* =========================
+   INTERACTIVITY
+   ========================= */
+function init() {
+  initMermaid();
+  initTabs();
+  initCollapse();
+  initCopyButtons();
+  initFilters();
+  initSwatches();
+  initTOC();
+  initPalette();
+}
+
+/* Mermaid */
+function initMermaid() {
+  if (window.mermaid) {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      themeVariables: {
+        background: '#0f100f',
+        primaryColor: '#262121',
+        primaryTextColor: '#f2f2c0',
+        primaryBorderColor: '#5b675b',
+        lineColor: '#5b675b',
+        secondaryColor: '#141415',
+        tertiaryColor: '#0c0e0c',
+        fontFamily: 'JetBrains Mono, monospace',
+        fontSize: '13px'
+      }
+    });
+    mermaid.run({ querySelector: '.mermaid' });
+  }
+}
+
+/* Tabs */
+function initTabs() {
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = btn.dataset.tab;
+      document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab === t));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === t));
+      // re-render mermaid no novo panel
+      setTimeout(() => { if (window.mermaid) mermaid.run({ querySelector: '.tab-panel.active .mermaid:not([data-processed])' }); }, 50);
+    });
+  });
+}
+
+/* Collapse */
+function initCollapse() {
+  document.querySelectorAll('h2').forEach(h => {
+    h.addEventListener('click', () => h.classList.toggle('collapsed'));
+  });
+  document.getElementById('collapse-all')?.addEventListener('click', () => {
+    document.querySelectorAll('.tab-panel.active h2').forEach(h => h.classList.add('collapsed'));
+  });
+  document.getElementById('expand-all')?.addEventListener('click', () => {
+    document.querySelectorAll('h2').forEach(h => h.classList.remove('collapsed'));
+  });
+}
+
+/* Copy buttons */
+function initCopyButtons() {
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const code = btn.parentElement.querySelector('pre code')?.textContent || '';
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '✓ copied';
+        btn.classList.add('copied');
+        showToast('código copiado');
+        setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 1500);
+      });
+    });
+  });
+}
+
+/* Filters + sort */
+function initFilters() {
+  document.querySelectorAll('input[data-filter]').forEach(inp => {
+    const key = inp.dataset.filter;
+    const table = document.querySelector(`table[data-rows="${key}"]`);
+    const count = document.getElementById(`count-${key}`);
+    inp.addEventListener('input', () => {
+      const q = inp.value.toLowerCase();
+      let visible = 0;
+      table.querySelectorAll('tbody tr').forEach(tr => {
+        const match = tr.textContent.toLowerCase().includes(q);
+        tr.classList.toggle('hidden', !match);
+        if (match) visible++;
+      });
+      count.textContent = `${visible} linhas`;
+    });
+  });
+  // sort por header
+  document.querySelectorAll('th').forEach((th, i) => {
+    th.addEventListener('click', () => {
+      const table = th.closest('table');
+      if (!table) return;
+      const rows = Array.from(table.querySelectorAll('tbody tr'));
+      const asc = !th.classList.contains('asc');
+      table.querySelectorAll('th').forEach(t => { t.classList.remove('asc','desc'); const s = t.querySelector('.sort-ind'); if (s) s.remove(); });
+      th.classList.add(asc ? 'asc' : 'desc');
+      const ind = document.createElement('span'); ind.className = 'sort-ind'; ind.textContent = asc ? '↑' : '↓';
+      th.appendChild(ind);
+      rows.sort((a, b) => {
+        const A = a.children[i]?.textContent.trim() || '';
+        const B = b.children[i]?.textContent.trim() || '';
+        return asc ? A.localeCompare(B) : B.localeCompare(A);
+      });
+      const tbody = table.querySelector('tbody');
+      rows.forEach(r => tbody.appendChild(r));
+    });
+  });
+}
+
+/* Swatches */
+function initSwatches() {
+  const tokens = [
+    ['bgMain', '#0c0e0c'], ['bgSidebar', '#0f100f'], ['bgActivity', '#141415'],
+    ['border', '#111311'], ['textMain', '#f2f2c0'], ['textDim', '#cec8ba'],
+    ['accent', '#5b675b'], ['accentDim', '#262121'], ['accentText', '#ffffff'],
+    ['accentForeground', '#262121'], ['success', '#bed78e'], ['warning', '#d0a795'], ['error', '#ff5555']
+  ];
+  const container = document.getElementById('swatches');
+  if (!container) return;
+  tokens.forEach(([name, hex]) => {
+    const el = document.createElement('div');
+    el.className = 'swatch';
+    el.innerHTML = `<div class="chip" style="background:${hex}"></div><div class="name">${name}</div><div class="hex">${hex}</div>`;
+    el.addEventListener('click', () => {
+      navigator.clipboard.writeText(hex).then(() => {
+        el.classList.add('copied');
+        showToast(`${name} = ${hex} copiado`);
+        setTimeout(() => el.classList.remove('copied'), 1500);
+      });
+    });
+    container.appendChild(el);
+  });
+}
+
+/* TOC scroll-spy */
+function initTOC() {
+  const links = document.querySelectorAll('#toc a');
+  const sections = Array.from(document.querySelectorAll('section[id]'));
+  if (!sections.length) return;
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = e.target.id;
+        links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => obs.observe(s));
+  links.forEach(a => a.addEventListener('click', (e) => {
+    const id = a.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (target) {
+      e.preventDefault();
+      // muda pra tab que contém a seção, se necessário
+      const panel = target.closest('.tab-panel');
+      if (panel && !panel.classList.contains('active')) {
+        document.querySelector(`.tab[data-tab="${panel.dataset.panel}"]`)?.click();
+      }
+      setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    }
+  }));
+}
+
+/* Command palette */
+const palette = {
+  items: [
+    { label: 'Ir para: Contexto', action: () => goTo('contexto') },
+    { label: 'Ir para: Arquitetura', action: () => goTo('arquitetura') },
+    { label: 'Ir para: Fluxo', action: () => goTo('fluxo') },
+    { label: 'Ir para: Theme', action: () => goTo('theme') },
+    { label: 'Ir para: Decisões', action: () => goTo('decisoes') },
+    { label: 'Ir para: Timeline', action: () => goTo('timeline') },
+    { label: 'Ir para: Métricas', action: () => goTo('metricas') },
+    { label: 'Ação: Colapsar todas as seções', action: () => document.getElementById('collapse-all').click() },
+    { label: 'Ação: Expandir todas as seções', action: () => document.getElementById('expand-all').click() },
+    { label: 'Ir para: Simple version', action: () => location.href = '../poc-skill-design/' }
+  ],
+  sel: 0
+};
+function goTo(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const panel = el.closest('.tab-panel');
+  if (panel && !panel.classList.contains('active')) document.querySelector(`.tab[data-tab="${panel.dataset.panel}"]`)?.click();
+  setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 100);
+}
+function openPalette() {
+  const bg = document.getElementById('palette-bg');
+  bg.classList.add('open');
+  const inp = document.getElementById('palette-input');
+  inp.value = ''; palette.sel = 0;
+  renderPalette('');
+  setTimeout(() => inp.focus(), 50);
+}
+function closePalette(e) {
+  if (e && e.target.id !== 'palette-bg') return;
+  document.getElementById('palette-bg').classList.remove('open');
+}
+function renderPalette(q) {
+  const r = document.getElementById('palette-results');
+  const items = palette.items.filter(i => i.label.toLowerCase().includes(q.toLowerCase()));
+  palette.filtered = items;
+  r.innerHTML = items.map((it, i) => `<div class="item ${i === palette.sel ? 'selected' : ''}" data-i="${i}">${it.label}</div>`).join('');
+  r.querySelectorAll('.item').forEach(el => el.addEventListener('click', () => {
+    palette.filtered[+el.dataset.i].action();
+    closePalette({ target: { id: 'palette-bg' } });
+  }));
+}
+function initPalette() {
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openPalette(); }
+    if (e.key === 'Escape') closePalette({ target: { id: 'palette-bg' } });
+  });
+  const inp = document.getElementById('palette-input');
+  inp.addEventListener('input', () => { palette.sel = 0; renderPalette(inp.value); });
+  inp.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); palette.sel = Math.min(palette.sel + 1, (palette.filtered.length || 1) - 1); renderPalette(inp.value); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); palette.sel = Math.max(palette.sel - 1, 0); renderPalette(inp.value); }
+    if (e.key === 'Enter') { e.preventDefault(); palette.filtered[palette.sel]?.action(); closePalette({ target: { id: 'palette-bg' } }); }
+  });
+}
+
+/* Toast */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+</script>
+
+</body>
+</html>
