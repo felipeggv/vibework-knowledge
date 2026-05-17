@@ -9,104 +9,40 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg-main:           #0c0e0c;
-    --bg-sidebar:        #0f100f;
-    --bg-activity:       #141415;
-    --border:            #111311;
-    --text-main:         #f2f2c0;
-    --text-dim:          #cec8ba;
-    --accent:            #5b675b;
-    --accent-dim:        #262121;
-    --accent-text:       #ffffff;
-    --success:           #bed78e;
-    --warning:           #d0a795;
-    --error:             #ff5555;
+        --bg-main:     #0c0e0c;
+    --bg-sidebar:  #0f100f;
+    --bg-activity: #141415;
+    --border:      #111311;
+    --text-main:   #f2f2c0;
+    --text-dim:    #cec8ba;
+    --accent:      #5b675b;
+    --accent-dim:  #262121;
+    --accent-text: #ffffff;
+    --success:     #bed78e;
+    --warning:     #d0a795;
+    --error:       #ff5555;
     --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   }
   * { box-sizing: border-box; }
-  body {
-    background: var(--bg-main);
-    color: var(--text-main);
-    font-family: var(--font-mono);
-    font-size: 14px;
-    line-height: 1.65;
-    max-width: 780px;
-    margin: 0 auto;
-    padding: 60px 32px 80px;
-    -webkit-font-smoothing: antialiased;
-  }
+  body { background: var(--bg-main); color: var(--text-main); font-family: var(--font-mono); font-size: 14px; line-height: 1.65; max-width: 780px; margin: 0 auto; padding: 60px 32px 80px; }
   header { border-bottom: 1px solid var(--border); padding-bottom: 24px; margin-bottom: 36px; }
-  .badge {
-    display: inline-block;
-    padding: 2px 8px;
-    background: var(--accent-dim);
-    color: var(--text-dim);
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    border: 1px solid var(--border);
-    margin-bottom: 14px;
-  }
-  h1 { font-size: 1.6rem; font-weight: 700; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .badge { display:inline-block; padding:2px 8px; background:var(--accent-dim); color:var(--text-dim); font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase; border:1px solid var(--border); margin-bottom:14px; }
+  h1 { font-size:1.6rem; font-weight:700; margin:0 0 8px; letter-spacing:-0.02em; }
   .sub { color: var(--text-dim); margin: 0; font-size: 0.9rem; }
-  h2 {
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-top: 36px;
-    margin-bottom: 14px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-  h2::before { content: "▸ "; color: var(--accent); }
-  ul { list-style: none; padding: 0; margin: 0; }
-  li {
-    padding: 14px 16px;
-    border: 1px solid var(--border);
-    background: var(--bg-sidebar);
-    margin-bottom: 8px;
-    border-radius: 2px;
-    transition: border-color 0.15s;
-  }
-  li:hover { border-color: var(--accent); }
-  li a { color: var(--text-main); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
-  li a:hover { color: var(--accent); }
-  .pill {
-    display: inline-block;
-    padding: 1px 8px;
-    background: var(--accent-dim);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    font-size: 0.65rem;
-    color: var(--text-dim);
-    margin-left: 8px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    vertical-align: middle;
-  }
-  .meta { display: block; color: var(--text-dim); font-size: 0.78rem; margin-top: 6px; }
-  code {
-    background: var(--bg-main);
-    border: 1px solid var(--border);
-    padding: 1px 6px;
-    border-radius: 2px;
-    font-size: 0.85em;
-    color: var(--text-main);
-  }
-  p { color: var(--text-main); }
-  footer {
-    margin-top: 60px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
-    color: var(--text-dim);
-    font-size: 0.75rem;
-    text-align: center;
-    letter-spacing: 0.05em;
-  }
-  footer .accent { color: var(--accent); }
-  ::-webkit-scrollbar { width: 10px; }
+  h2 { font-size:0.85rem; font-weight:600; margin-top:36px; margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--border); color:var(--text-dim); text-transform:uppercase; letter-spacing:0.1em; }
+  h2::before { content:"▸ "; color: var(--accent); }
+  ul { list-style:none; padding:0; margin:0; }
+  li { padding:14px 16px; border:1px solid var(--border); background:var(--bg-sidebar); margin-bottom:8px; transition: border-color 0.15s; }
+  li:hover { border-color:var(--accent); }
+  li a { color:var(--text-main); text-decoration:none; font-weight:600; font-size:0.95rem; }
+  li a:hover { color:var(--accent); }
+  .pill { display:inline-block; padding:1px 8px; background:var(--accent-dim); border:1px solid var(--border); font-size:0.65rem; color:var(--text-dim); margin-left:8px; letter-spacing:0.1em; text-transform:uppercase; vertical-align:middle; }
+  .meta { display:block; color:var(--text-dim); font-size:0.78rem; margin-top:6px; }
+  code { background:var(--bg-main); border:1px solid var(--border); padding:1px 6px; font-size:0.85em; }
+  p { color:var(--text-main); }
+  footer { margin-top:60px; padding-top:20px; border-top:1px solid var(--border); color:var(--text-dim); font-size:0.75rem; text-align:center; letter-spacing:0.05em; }
+  footer .accent { color:var(--accent); }
+  ::-webkit-scrollbar { width:10px; }
   ::-webkit-scrollbar-track { background: var(--bg-sidebar); }
   ::-webkit-scrollbar-thumb { background: var(--border); }
   ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
@@ -121,25 +57,29 @@
 
   <h2>Artefatos publicados</h2>
   <ul>
-    <li>
-      <a href="research/2026-05-artifacts-publisher/artifacts/poc-skill-design/">POC — Skill <code>artifacts-publisher</code> <em>(simple)</em></a>
-      <span class="pill">protegido</span>
-      <span class="pill">simple</span>
-      <span class="meta">2026-05-17 · Design da skill — modo simple, leitura linear, tipografia limpa</span>
+        <li>
+      <a href="research/2026-05-artifacts-publisher/artifacts/poc-skill-design-full/">poc-skill-design-full</a>
+      <span class="pill">público</span> <span class="pill">simple</span>
+      <span class="meta">2026-05-17 · 2026-05-artifacts-publisher</span>
     </li>
     <li>
-      <a href="research/2026-05-artifacts-publisher/artifacts/poc-skill-design-full/">POC FULL — Skill <code>artifacts-publisher</code> <em>(interativo)</em></a>
-      <span class="pill">protegido</span>
-      <span class="pill">full</span>
-      <span class="meta">2026-05-17 · Mesma POC com tabs, Mermaid, palette ⌘K, swatches, filtros e scroll-spy</span>
+      <a href="research/2026-05-artifacts-publisher/artifacts/poc-skill-design/">poc-skill-design</a>
+      <span class="pill">público</span> <span class="pill">simple</span>
+      <span class="meta">2026-05-17 · 2026-05-artifacts-publisher</span>
     </li>
+    <li>
+      <a href="research/2026-05-artifacts-publisher/artifacts/skill-cristalizada-smoke-final/">skill-cristalizada-smoke-final</a>
+      <span class="pill">protegido</span> <span class="pill">full</span>
+      <span class="meta">2026-05-17 · 2026-05-artifacts-publisher</span>
+    </li>
+
   </ul>
 
   <h2>Convenção</h2>
-  <p>Cada artefato vive em <code>research/YYYY-MM-tema/artifacts/&lt;slug&gt;/</code> com <code>index.html</code> (consumo) e <code>raw.md</code> (matéria-prima).</p>
+  <p>Cada artefato vive em <code>research/YYYY-MM-tema/artifacts/&lt;slug&gt;/</code> com <code>index.html</code> (consumo) e <code>raw.md</code> (matéria-prima). Padrão herdado de <code>blessy-knowledge</code>.</p>
 
   <footer>
-    <span class="accent">workspace</span> VibeworkV2 · padrão herdado de <code>blessy-knowledge</code> · theme snapshot Maestro
+    <span class="accent">workspace</span> VibeworkV2 · theme snapshot Maestro · skill <code>artifacts-publisher</code>
   </footer>
 </body>
 </html>

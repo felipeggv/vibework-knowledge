@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skill Cristalizada Smoke Final</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root {
+        --bg-main:     #0c0e0c;
+    --bg-sidebar:  #0f100f;
+    --bg-activity: #141415;
+    --border:      #111311;
+    --text-main:   #f2f2c0;
+    --text-dim:    #cec8ba;
+    --accent:      #5b675b;
+    --accent-dim:  #262121;
+    --accent-text: #ffffff;
+    --success:     #bed78e;
+    --warning:     #d0a795;
+    --error:       #ff5555;
+    --accent-bright: #7a8a7a;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg-main); color: var(--text-main); font-family: var(--font-mono); font-size: 13.5px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+
+  #ap-app { min-height: 100vh; }
+  .ap-grid { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+  @media (max-width: 900px) { .ap-grid { grid-template-columns: 1fr; } .ap-sidebar { display: none; } }
+
+  .ap-sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border); padding: 32px 20px; position: sticky; top: 0; max-height: 100vh; overflow-y: auto; }
+  .ap-sidebar .ap-brand { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px; }
+  .ap-sidebar .ap-brand-name { font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 24px; }
+  .ap-sidebar .ap-brand-name .accent { color: var(--accent); }
+  .ap-sidebar .ap-toc-title { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); margin: 20px 0 10px; }
+  .ap-toc { list-style: none; padding: 0; margin: 0; }
+  .ap-toc a { display: block; padding: 6px 10px; color: var(--text-dim); text-decoration: none; font-size: 0.82rem; border-left: 2px solid transparent; transition: all 0.15s; }
+  .ap-toc a:hover { color: var(--text-main); background: var(--accent-dim); }
+  .ap-toc a.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-dim); }
+  .ap-kbd-hint { margin-top: 20px; padding: 12px; border: 1px solid var(--border); background: var(--bg-main); font-size: 0.7rem; color: var(--text-dim); }
+  .ap-kbd { display: inline-block; padding: 1px 5px; background: var(--accent-dim); border: 1px solid var(--border); border-radius: 2px; font-size: 0.65rem; color: var(--text-main); }
+
+  .ap-main { padding: 40px 56px 80px; max-width: 980px; }
+  @media (max-width: 900px) { .ap-main { padding: 32px 24px 60px; } }
+
+  .ap-header { border-bottom: 1px solid var(--border); padding-bottom: 24px; margin-bottom: 32px; }
+  .ap-crumb { color: var(--text-dim); font-size: 0.72rem; letter-spacing: 0.08em; margin-bottom: 12px; text-transform: uppercase; }
+  .ap-crumb .accent { color: var(--accent); }
+  .ap-main h1 { font-size: 1.8rem; font-weight: 700; margin: 0 0 12px; letter-spacing: -0.02em; }
+  .ap-meta-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+  .ap-pill { display: inline-block; padding: 2px 10px; background: var(--accent-dim); border: 1px solid var(--border); color: var(--text-dim); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .ap-status { padding: 3px 10px; background: rgba(190, 215, 142, 0.12); border: 1px solid var(--success); color: var(--success); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+  .ap-header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ap-btn-sm { padding: 5px 12px; background: transparent; border: 1px solid var(--border); color: var(--text-dim); font: inherit; font-size: 0.75rem; cursor: pointer; letter-spacing: 0.05em; }
+  .ap-btn-sm:hover { border-color: var(--accent); color: var(--text-main); }
+
+  .ap-main section { margin-bottom: 48px; scroll-margin-top: 20px; }
+  .ap-main h2 { font-size: 1.05rem; font-weight: 600; margin: 0 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.06em; cursor: pointer; user-select: none; display: flex; align-items: center; gap: 8px; }
+  .ap-main h2::before { content: "▸"; color: var(--accent); transition: transform 0.2s; }
+  .ap-main h2.collapsed::before { transform: rotate(-90deg); }
+  .ap-main h2.collapsed + * { display: none; }
+  .ap-main h3 { font-size: 0.92rem; font-weight: 600; margin: 22px 0 10px; color: var(--text-dim); letter-spacing: 0.04em; }
+  .ap-main p { margin: 0 0 14px; }
+  .ap-main ul, .ap-main ol { padding-left: 22px; }
+  .ap-main li { margin-bottom: 6px; }
+  .ap-main li::marker { color: var(--accent); }
+  .ap-main a { color: var(--accent); text-decoration: underline; text-decoration-color: var(--border); text-underline-offset: 3px; }
+  .ap-main a:hover { color: var(--success); text-decoration-color: var(--success); }
+  .ap-main code { background: var(--bg-sidebar); border: 1px solid var(--border); padding: 1px 6px; font-size: 0.85em; }
+  .ap-main pre { background: var(--bg-sidebar); border: 1px solid var(--border); padding: 16px 18px; overflow-x: auto; font-size: 0.8rem; line-height: 1.55; margin: 14px 0; position: relative; }
+  .ap-main pre code { background: transparent; border: none; padding: 0; color: var(--text-main); }
+  .ap-main pre .ap-copy-btn { position: absolute; top: 8px; right: 8px; padding: 4px 10px; background: var(--bg-activity); border: 1px solid var(--border); color: var(--text-dim); font: inherit; font-size: 0.7rem; cursor: pointer; opacity: 0; transition: opacity 0.15s; letter-spacing: 0.05em; text-transform: uppercase; }
+  .ap-main pre:hover .ap-copy-btn { opacity: 1; }
+  .ap-copy-btn:hover { color: var(--text-main); border-color: var(--accent); }
+  .ap-copy-btn.copied { color: var(--success); border-color: var(--success); }
+  .ap-main table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.85rem; }
+  .ap-main th, .ap-main td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--border); }
+  .ap-main th { background: var(--bg-activity); color: var(--text-dim); font-weight: 600; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 1px solid var(--accent); cursor: pointer; user-select: none; }
+  .ap-main tr:hover td { background: var(--accent-dim); }
+  .ap-main strong { color: var(--text-main); font-weight: 700; }
+  .ap-main blockquote { margin: 16px 0; padding: 12px 18px; border-left: 3px solid var(--accent); background: var(--bg-sidebar); color: var(--text-dim); }
+
+  .ap-mermaid-wrap { background: var(--bg-sidebar); border: 1px solid var(--border); padding: 20px; margin: 14px 0; overflow-x: auto; }
+  .ap-mermaid-wrap .mermaid { display: flex; justify-content: center; }
+
+  #ap-palette-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 100; align-items: flex-start; justify-content: center; padding-top: 80px; }
+  #ap-palette-bg.open { display: flex; }
+  #ap-palette { width: 100%; max-width: 520px; background: var(--bg-sidebar); border: 1px solid var(--accent); box-shadow: 0 24px 60px rgba(0,0,0,0.7); }
+  #ap-palette input { width: 100%; padding: 14px 18px; background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--text-main); font: inherit; font-size: 0.95rem; outline: none; }
+  #ap-palette-results { max-height: 340px; overflow-y: auto; }
+  #ap-palette-results .item { padding: 10px 18px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: var(--text-dim); font-size: 0.85rem; }
+  #ap-palette-results .item:hover, #ap-palette-results .item.selected { background: var(--accent-dim); color: var(--text-main); }
+  #ap-palette-results .item::before { content: "›"; color: var(--accent); }
+
+  .ap-toast { position: fixed; bottom: 24px; right: 24px; padding: 10px 16px; background: var(--bg-sidebar); border: 1px solid var(--success); color: var(--success); font-size: 0.82rem; opacity: 0; transform: translateY(20px); transition: all 0.25s; pointer-events: none; z-index: 200; }
+  .ap-toast.show { opacity: 1; transform: translateY(0); }
+
+  .ap-footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.75rem; text-align: center; letter-spacing: 0.05em; }
+  .ap-footer .accent { color: var(--accent); }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg-sidebar); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- =========================================================
+     PASSWORD GATE (AES-GCM)
+     Conteúdo criptografado de verdade. View-source NÃO revela o conteúdo.
+     ========================================================= -->
+<div id="ap-gate">
+  <div class="ap-gate-card">
+    <div class="ap-gate-badge">protected · vibework-knowledge</div>
+    <h1 class="ap-gate-title">Acesso restrito</h1>
+    <p class="ap-gate-lead">Este artefato exige autenticação. Insira a senha compartilhada pelo time.</p>
+    <form id="ap-gate-form">
+      <label for="ap-gate-input" class="ap-gate-label">senha</label>
+      <input type="password" id="ap-gate-input" autocomplete="off" autofocus spellcheck="false">
+      <button type="submit" class="ap-gate-btn">› ACESSAR</button>
+      <div class="ap-gate-err" id="ap-gate-err"></div>
+    </form>
+    <div class="ap-gate-footnote">
+      <div class="ap-gate-prompt">artifacts-publisher · aes-gcm-256 · pbkdf2-100k</div>
+      Sessão persistente nesta aba. F5 não exige nova senha.
+    </div>
+  </div>
+</div>
+
+<div id="ap-content-mount"></div>
+
+<style>
+  #ap-gate { display:flex; align-items:center; justify-content:center; min-height:100vh; padding:24px; background: radial-gradient(ellipse at center, rgba(91,103,91,0.08) 0%, transparent 60%), var(--bg-main); }
+  .ap-gate-card { background: var(--bg-sidebar); border: 1px solid var(--border); padding: 40px 36px; max-width: 440px; width: 100%; box-shadow: 0 0 0 1px var(--border), 0 24px 60px rgba(0,0,0,0.5); }
+  .ap-gate-badge { display:inline-block; padding:2px 8px; background:var(--accent-dim); color:var(--text-dim); font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase; border:1px solid var(--border); margin-bottom:16px; }
+  .ap-gate-title { font-size:1.15rem; font-weight:600; margin:0 0 6px; color:var(--text-main); }
+  .ap-gate-lead { color:var(--text-dim); font-size:0.85rem; margin:0 0 24px; line-height:1.5; }
+  .ap-gate-label { display:block; color:var(--text-dim); font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; }
+  #ap-gate-input { width:100%; padding:10px 12px; background:var(--bg-main); border:1px solid var(--border); color:var(--text-main); font:inherit; font-size:0.95rem; outline:none; transition: border-color 0.15s; }
+  #ap-gate-input:focus { border-color:var(--accent); }
+  .ap-gate-btn { width:100%; margin-top:14px; padding:10px; background:var(--accent); color:var(--accent-text); border:1px solid var(--accent); font:inherit; cursor:pointer; letter-spacing:0.05em; transition: background 0.15s; }
+  .ap-gate-btn:hover { background:#6d796d; border-color:#6d796d; }
+  .ap-gate-err { color:var(--error); font-size:0.8rem; margin-top:12px; min-height:1.2em; }
+  .ap-gate-footnote { margin-top:28px; padding-top:16px; border-top:1px solid var(--border); color:var(--text-dim); font-size:0.7rem; line-height:1.6; }
+  .ap-gate-prompt::before { content:"$ "; color:var(--accent); }
+</style>
+
+<script>
+(function() {
+  // Payload AES-GCM (base64). Sem senha correta = HTML cifrado = inacessível.
+  const ENCRYPTED_PAYLOAD = "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";
+  const SALT_B64 = "PHpcB5WeI8EjCp99Qv1ixA==";
+  const IV_B64 = "wTCTbaYl/ipqA1Rp";
+  const STORAGE_KEY = "ap-unlock-artifact";
+
+  const gate = document.getElementById('ap-gate');
+  const mount = document.getElementById('ap-content-mount');
+  const form = document.getElementById('ap-gate-form');
+  const input = document.getElementById('ap-gate-input');
+  const err = document.getElementById('ap-gate-err');
+
+  function b64ToBytes(b64) {
+    const bin = atob(b64);
+    const out = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+
+  async function deriveKey(password, salt) {
+    const enc = new TextEncoder();
+    const baseKey = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+    return crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' },
+      baseKey,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['decrypt']
+    );
+  }
+
+  async function decryptPayload(password) {
+    const salt = b64ToBytes(SALT_B64);
+    const iv = b64ToBytes(IV_B64);
+    const cipher = b64ToBytes(ENCRYPTED_PAYLOAD);
+    const key = await deriveKey(password, salt);
+    const plainBuf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, cipher);
+    return new TextDecoder().decode(plainBuf);
+  }
+
+  async function tryUnlock(password) {
+    try {
+      const html = await decryptPayload(password);
+      mount.innerHTML = html;
+      // Re-executa scripts inline injetados via innerHTML (browsers não rodam automaticamente)
+      mount.querySelectorAll('script').forEach(oldScript => {
+        const newScript = document.createElement('script');
+        if (oldScript.src) newScript.src = oldScript.src;
+        else newScript.textContent = oldScript.textContent;
+        oldScript.replaceWith(newScript);
+      });
+      gate.style.display = 'none';
+      mount.style.display = 'block';
+      sessionStorage.setItem(STORAGE_KEY, password);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Auto-unlock se sessão já autenticou
+  const saved = sessionStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    tryUnlock(saved).then(ok => { if (!ok) sessionStorage.removeItem(STORAGE_KEY); });
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    err.textContent = '';
+    const ok = await tryUnlock(input.value);
+    if (!ok) {
+      err.textContent = '✗ senha incorreta';
+      input.value = '';
+      input.focus();
+    }
+  });
+})();
+</script>
+
+
+
+
+<script>
+// Mount content (after gate or directly if no gate)
+(function() {
+  const tpl = document.getElementById('ap-content-tpl');
+  if (!tpl) return;
+  const mount = document.getElementById('ap-content-mount');
+  if (mount) {
+    mount.innerHTML = tpl.innerHTML;
+    mount.style.display = 'none';
+  } else {
+    document.body.appendChild(tpl.content.cloneNode(true));
+    apInit();
+  }
+})();
+
+function apInit() {
+  apInitMermaid();
+  apInitCollapse();
+  apInitCopyButtons();
+  apInitTOC();
+  apInitPalette();
+  apInjectCopyButtons();
+}
+
+function apInjectCopyButtons() {
+  document.querySelectorAll('.ap-main pre').forEach(pre => {
+    if (pre.querySelector('.ap-copy-btn')) return;
+    const btn = document.createElement('button');
+    btn.className = 'ap-copy-btn';
+    btn.textContent = 'copy';
+    pre.appendChild(btn);
+  });
+}
+
+function apInitMermaid() {
+  if (!window.mermaid) return;
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'base',
+    themeVariables: {
+      background: '#0f100f',
+      primaryColor: '#262121',
+      primaryTextColor: '#f2f2c0',
+      primaryBorderColor: '#5b675b',
+      lineColor: '#5b675b',
+      secondaryColor: '#141415',
+      tertiaryColor: '#0c0e0c',
+      fontFamily: 'JetBrains Mono, monospace',
+      fontSize: '13px'
+    }
+  });
+  // Wrap inline mermaid blocks (```mermaid → .mermaid-wrap > .mermaid)
+  document.querySelectorAll('pre code.language-mermaid').forEach(code => {
+    const wrap = document.createElement('div');
+    wrap.className = 'ap-mermaid-wrap';
+    const inner = document.createElement('div');
+    inner.className = 'mermaid';
+    inner.textContent = code.textContent;
+    wrap.appendChild(inner);
+    code.closest('pre').replaceWith(wrap);
+  });
+  mermaid.run({ querySelector: '.mermaid' });
+}
+
+function apInitCollapse() {
+  document.querySelectorAll('.ap-main h2').forEach(h => h.addEventListener('click', () => h.classList.toggle('collapsed')));
+  document.getElementById('ap-collapse-all')?.addEventListener('click', () => document.querySelectorAll('.ap-main h2').forEach(h => h.classList.add('collapsed')));
+  document.getElementById('ap-expand-all')?.addEventListener('click', () => document.querySelectorAll('.ap-main h2').forEach(h => h.classList.remove('collapsed')));
+}
+
+function apInitCopyButtons() {
+  document.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('ap-copy-btn')) return;
+    const pre = e.target.closest('pre');
+    const code = pre?.querySelector('code')?.textContent || pre?.textContent || '';
+    navigator.clipboard.writeText(code).then(() => {
+      e.target.textContent = '✓ copied';
+      e.target.classList.add('copied');
+      apToast('código copiado');
+      setTimeout(() => { e.target.textContent = 'copy'; e.target.classList.remove('copied'); }, 1500);
+    });
+  });
+}
+
+function apInitTOC() {
+  const links = document.querySelectorAll('#ap-toc a');
+  const sections = Array.from(document.querySelectorAll('.ap-main section[id], .ap-main h2[id]'));
+  if (!sections.length) return;
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        const id = en.target.id;
+        links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => obs.observe(s));
+  links.forEach(a => a.addEventListener('click', (e) => {
+    const id = a.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  }));
+}
+
+const apPalette = { items: [], filtered: [], sel: 0 };
+function apOpenPalette() {
+  apPalette.items = Array.from(document.querySelectorAll('.ap-main h2[id], .ap-main section[id]')).map(el => ({
+    label: 'Ir para: ' + (el.textContent || el.id).trim().replace(/^▸\s*/, ''),
+    action: () => el.scrollIntoView({ behavior: 'smooth' })
+  }));
+  apPalette.items.push({ label: 'Ação: Colapsar tudo', action: () => document.getElementById('ap-collapse-all')?.click() });
+  apPalette.items.push({ label: 'Ação: Expandir tudo', action: () => document.getElementById('ap-expand-all')?.click() });
+  const bg = document.getElementById('ap-palette-bg');
+  bg.classList.add('open');
+  const inp = document.getElementById('ap-palette-input');
+  inp.value = ''; apPalette.sel = 0;
+  apRenderPalette('');
+  setTimeout(() => inp.focus(), 50);
+}
+function apClosePalette(e) {
+  if (e && e.target.id !== 'ap-palette-bg') return;
+  document.getElementById('ap-palette-bg').classList.remove('open');
+}
+function apRenderPalette(q) {
+  const r = document.getElementById('ap-palette-results');
+  const items = apPalette.items.filter(i => i.label.toLowerCase().includes(q.toLowerCase()));
+  apPalette.filtered = items;
+  r.innerHTML = items.map((it, i) => `<div class="item ${i === apPalette.sel ? 'selected' : ''}" data-i="${i}">${it.label}</div>`).join('');
+  r.querySelectorAll('.item').forEach(el => el.addEventListener('click', () => {
+    apPalette.filtered[+el.dataset.i].action();
+    apClosePalette({ target: { id: 'ap-palette-bg' } });
+  }));
+}
+function apInitPalette() {
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); apOpenPalette(); }
+    if (e.key === 'Escape') apClosePalette({ target: { id: 'ap-palette-bg' } });
+  });
+  const inp = document.getElementById('ap-palette-input');
+  inp?.addEventListener('input', () => { apPalette.sel = 0; apRenderPalette(inp.value); });
+  inp?.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); apPalette.sel = Math.min(apPalette.sel + 1, (apPalette.filtered.length || 1) - 1); apRenderPalette(inp.value); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); apPalette.sel = Math.max(apPalette.sel - 1, 0); apRenderPalette(inp.value); }
+    if (e.key === 'Enter') { e.preventDefault(); apPalette.filtered[apPalette.sel]?.action(); apClosePalette({ target: { id: 'ap-palette-bg' } }); }
+  });
+}
+
+function apToast(msg) {
+  const t = document.getElementById('ap-toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window.__apToastT);
+  window.__apToastT = setTimeout(() => t.classList.remove('show'), 1800);
+}
+</script>
+
+</body>
+</html>

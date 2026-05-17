@@ -17,3 +17,5 @@
 1. Conteúdo raw em `poc-skill-design/raw.md`
 2. HTML de consumo em `poc-skill-design/index.html` (com password gate JS)
 3. Senha do gate compartilhada via canal interno (não em commit)
+
+- `skill-cristalizada-smoke-final` (full, ✓ AES-GCM) → https://felipeggv.github.io/vibework-knowledge/research/2026-05-artifacts-publisher/artifacts/skill-cristalizada-smoke-final/ — 2026-05-17
