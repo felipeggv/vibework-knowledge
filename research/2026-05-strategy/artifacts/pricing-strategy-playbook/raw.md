@@ -9,10 +9,10 @@ Pricing é decidido por intuição na maior parte dos casos. O resultado é marg
 ## Framework visual de decisão
 
 <!-- Diagrama gerado pelo visual-explainer skill -->
-<div class="ve-pricing-framework" style="max-width:600px;margin:24px auto;font-family:'Inter',-apple-system,system-ui,sans-serif;color:#f2f2c0;background:#0f100f;border:1px solid #111311;border-radius:12px;padding:32px 28px;box-sizing:border-box;">
+<div class="ve-pricing-framework" style="max-width:600px;margin:24px auto;font-family:'JetBrains Mono',monospace;color:#f2f2c0;background:#0f100f;border:1px solid #111311;border-radius:12px;padding:32px 28px;box-sizing:border-box;">
   <header style="margin-bottom:28px;text-align:center;">
     <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#5b675b;margin-bottom:8px;font-weight:600;">Decision Framework</div>
-    <h3 style="font-family:'Newsreader',Georgia,serif;font-weight:500;font-size:24px;line-height:1.2;margin:0;color:#f2f2c0;letter-spacing:-0.01em;">Qual modelo de pricing?</h3>
+    <h3 style="font-family:'JetBrains Mono',monospace;font-weight:500;font-size:24px;line-height:1.2;margin:0;color:#f2f2c0;letter-spacing:-0.01em;">Qual modelo de pricing?</h3>
   </header>
   <div style="display:flex;flex-direction:column;gap:0;border-left:2px solid #5b675b;margin-left:8px;padding-left:24px;position:relative;">
     <div style="position:relative;padding-bottom:20px;">
@@ -38,7 +38,7 @@ Pricing é decidido por intuição na maior parte dos casos. O resultado é marg
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#bed78e" stroke-width="2"><path d="M12 2v20M5 9l7 7 7-7"/></svg>
       </div>
       <div>
-        <div style="font-family:'Newsreader',Georgia,serif;font-size:17px;font-weight:500;color:#f2f2c0;margin-bottom:4px;">Cost-plus</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:500;color:#f2f2c0;margin-bottom:4px;">Cost-plus</div>
         <div style="font-size:13px;color:#cec8ba;line-height:1.5;margin-bottom:6px;">Preço = custo + margem fixa. Previsível, defensável, comum em hardware e serviços B2B com escopo claro.</div>
         <div style="font-size:11px;color:#5b675b;letter-spacing:0.04em;"><span style="color:#d0a795;">trade-off:</span> deixa dinheiro na mesa quando o valor percebido é maior</div>
       </div>
@@ -48,7 +48,7 @@ Pricing é decidido por intuição na maior parte dos casos. O resultado é marg
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#bed78e" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
       </div>
       <div>
-        <div style="font-family:'Newsreader',Georgia,serif;font-size:17px;font-weight:500;color:#f2f2c0;margin-bottom:4px;">Value-based</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:500;color:#f2f2c0;margin-bottom:4px;">Value-based</div>
         <div style="font-size:13px;color:#cec8ba;line-height:1.5;margin-bottom:6px;">Preço ancorado no ROI/economia gerada ao cliente. Margens altas, ciclo de venda mais longo, exige discovery profundo.</div>
         <div style="font-size:11px;color:#5b675b;letter-spacing:0.04em;"><span style="color:#d0a795;">trade-off:</span> aquisição mais lenta, exige forte caso de valor</div>
       </div>
@@ -58,7 +58,7 @@ Pricing é decidido por intuição na maior parte dos casos. O resultado é marg
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#bed78e" stroke-width="2"><path d="M3 12h18M12 3v18"/><path d="M3 3l18 18M21 3L3 21"/></svg>
       </div>
       <div>
-        <div style="font-family:'Newsreader',Georgia,serif;font-size:17px;font-weight:500;color:#f2f2c0;margin-bottom:4px;">Penetration</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:500;color:#f2f2c0;margin-bottom:4px;">Penetration</div>
         <div style="font-size:13px;color:#cec8ba;line-height:1.5;margin-bottom:6px;">Preço baixo (até negativo) pra capturar marketshare rápido. Vence quando há network effects ou economia de escala depois.</div>
         <div style="font-size:11px;color:#5b675b;letter-spacing:0.04em;"><span style="color:#d0a795;">trade-off:</span> queima caixa; depende de retenção e upsell pra LTV/CAC fechar</div>
       </div>

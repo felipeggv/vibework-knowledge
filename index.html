@@ -7,12 +7,11 @@
 <meta name="description" content="Wiki interno de vibework-knowledge">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Geist+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   ARTIFACTS-PUBLISHER v2 — CSS BASE
-   Maestro dark green + Fraunces serif H1 + Geist Mono H2 + JBMono body
-   Hierarchy exported from typography-playground (2026-05-17)
+   ARTIFACTS-PUBLISHER v2 — MAESTRO STYLE
+   100% JetBrains Mono · UI compacta (14px base) · Obsidian sidebar
    ========================================================= */
 :root {
   /* Theme tokens (snapshot Maestro) */
@@ -30,64 +29,62 @@
   --error: #ff5555;
 
 
-  /* ---------- Typography (per-level tokens) ---------- */
-  --h1-family: "Fraunces", Georgia, "Times New Roman", serif;
-  --h1-size: 52px;
-  --h1-weight: 600;
-  --h1-lh: 1.05;
-  --h1-tracking: -0.02em;
+  /* ---------- Typography — ALL JetBrains Mono ---------- */
+  --font: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
-  --h2-family: "Geist Mono", ui-monospace, "JetBrains Mono", monospace;
-  --h2-size: 26px;
-  --h2-weight: 600;
-  --h2-lh: 1.3;
-  --h2-tracking: -0.005em;
+  /* Tamanhos compactos como Maestro */
+  --t-base: 14px;     /* body */
+  --t-sm:   13px;     /* meta, secondary */
+  --t-xs:   12px;     /* micro labels */
+  --t-2xs:  11px;     /* breadcrumb, pills */
 
-  --h3-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
-  --h3-size: 18px;
-  --h3-weight: 500;
-  --h3-lh: 1.4;
+  --t-h1:   24px;
+  --t-h2:   18px;
+  --t-h3:   16px;
+  --t-h4:   14px;
 
-  --body-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
-  --body-size: 16px;
-  --body-weight: 400;
-  --body-lh: 1.7;
+  --lh-body: 1.7;
+  --lh-tight: 1.4;
+  --lh-heading: 1.3;
 
-  --ui-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
-  --ui-size: 11px;
-  --ui-weight: 500;
-  --ui-tracking: 0.1em;
-
-  --code-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  --code-size: 14px;
-  --code-weight: 400;
-
-  /* ---------- Backwards-compat aliases (legacy templates) ---------- */
-  --font-sans: var(--body-family);
-  --font-serif: var(--h1-family);
-  --font-mono: var(--code-family);
-  --text-xs: 11px;
-  --text-sm: 13px;
-  --text-base: 16px;
-  --text-lg: 18px;
-  --text-xl: 22px;
-  --text-2xl: 26px;
-  --text-3xl: 52px;
+  /* ---------- Backwards-compat (templates antigos) ---------- */
+  --font-sans: var(--font);
+  --font-serif: var(--font);
+  --font-mono: var(--font);
+  --body-family: var(--font);
+  --h1-family: var(--font);
+  --h2-family: var(--font);
+  --h3-family: var(--font);
+  --ui-family: var(--font);
+  --code-family: var(--font);
+  --body-size: var(--t-base);
+  --body-lh: var(--lh-body);
+  --ui-size: var(--t-2xs);
+  --ui-weight: 600;
+  --ui-tracking: 0.08em;
+  --code-size: var(--t-base);
+  --text-xs: var(--t-2xs);
+  --text-sm: var(--t-sm);
+  --text-base: var(--t-base);
+  --text-lg: var(--t-h3);
+  --text-xl: var(--t-h2);
+  --text-2xl: var(--t-h1);
+  --text-3xl: var(--t-h1);
 
   /* ---------- Spacing scale (4px base) ---------- */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 32px;
-  --space-7: 48px;
-  --space-8: 64px;
-  --space-9: 96px;
+  --space-5: 20px;
+  --space-6: 28px;
+  --space-7: 40px;
+  --space-8: 56px;
+  --space-9: 80px;
 
-  /* ---------- Layout widths (expanded per user feedback) ---------- */
-  --max-content: 920px;
-  --max-wide: 1280px;
+  /* ---------- Layout ---------- */
+  --sidebar-w: 240px;
+  --content-w: 880px;
 }
 
 * { box-sizing: border-box; }
@@ -96,326 +93,303 @@ html, body {
   padding: 0;
   background: var(--bg-main);
   color: var(--text-main);
-  font-family: var(--body-family);
-  font-size: var(--body-size);
-  line-height: var(--body-lh);
+  font-family: var(--font);
+  font-size: var(--t-base);
+  line-height: var(--lh-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* =========================================================
-   APP HEADER (persistent — present on EVERY page of the wiki)
+   OBSIDIAN-STYLE LAYOUT
+   Sidebar fixa à esquerda (full-height), main content à direita.
    ========================================================= */
-.ap-app-header {
-  border-bottom: 1px solid var(--border);
+.ap-app-header { display: none; }  /* removido: o wordmark vai pra dentro da sidebar */
+
+.ap-app-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  min-height: 100vh;
+}
+@media (max-width: 880px) {
+  .ap-app-shell { grid-template-columns: 1fr; }
+  .ap-sidebar { position: static !important; height: auto !important; max-height: none !important; border-right: none !important; border-bottom: 1px solid var(--border); }
+}
+
+/* SIDEBAR — Obsidian style */
+.ap-sidebar {
   background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  padding: var(--space-4) 0;
   position: sticky;
   top: 0;
-  z-index: 50;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-.ap-app-header-inner {
-  max-width: var(--max-wide);
-  margin: 0 auto;
-  padding: var(--space-3) var(--space-5);
+  height: 100vh;
+  overflow-y: auto;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-5);
+  flex-direction: column;
+  gap: var(--space-4);
 }
-.ap-wordmark {
-  font-family: var(--ui-family);
-  font-weight: 600;
-  font-size: 13px;
-  letter-spacing: 0.02em;
-  color: var(--text-main);
-  text-decoration: none;
-  display: inline-flex;
+.ap-sidebar .ap-brand {
+  padding: 0 var(--space-4);
+  display: flex;
   align-items: center;
   gap: var(--space-2);
-}
-.ap-wordmark::before {
-  content: "";
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-  border-radius: 1px;
-}
-.ap-wordmark .dim { color: var(--text-dim); font-weight: 400; margin-left: var(--space-2); }
-.ap-app-nav {
-  display: flex;
-  gap: var(--space-4);
-  align-items: center;
-}
-.ap-app-nav a {
-  color: var(--text-dim);
   text-decoration: none;
-  font-family: var(--ui-family);
-  font-size: 13px;
-  font-weight: 500;
-  transition: color 0.15s;
-}
-.ap-app-nav a:hover, .ap-app-nav a.active { color: var(--text-main); }
-
-/* =========================================================
-   BREADCRUMB
-   ========================================================= */
-.ap-breadcrumb {
-  max-width: var(--max-wide);
-  margin: 0 auto;
-  padding: var(--space-4) var(--space-5);
-  font-family: var(--ui-family);
-  font-size: var(--ui-size);
-  font-weight: var(--ui-weight);
-  letter-spacing: var(--ui-tracking);
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
-.ap-breadcrumb a { color: var(--text-dim); text-decoration: none; }
-.ap-breadcrumb a:hover { color: var(--text-main); }
-.ap-breadcrumb .sep { color: var(--accent); margin: 0 var(--space-2); }
-.ap-breadcrumb .current { color: var(--text-main); }
-
-/* =========================================================
-   PAGE LAYOUT — sidebar + main
-   ========================================================= */
-.ap-page {
-  max-width: var(--max-wide);
-  margin: 0 auto;
-  padding: var(--space-5) var(--space-5) var(--space-9);
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: var(--space-7);
-}
-@media (max-width: 980px) {
-  .ap-page { grid-template-columns: 1fr; gap: var(--space-5); }
-  .ap-sidebar { order: 2; border-top: 1px solid var(--border); padding-top: var(--space-5); position: static; max-height: none; }
-}
-
-.ap-sidebar {
-  position: sticky;
-  top: 80px;
-  align-self: start;
-  max-height: calc(100vh - 100px);
-  overflow-y: auto;
-}
-.ap-sidebar h4 {
-  font-family: var(--ui-family);
-  font-size: var(--ui-size);
+  color: var(--text-main);
+  font-family: var(--font);
+  font-size: var(--t-sm);
   font-weight: 600;
-  letter-spacing: var(--ui-tracking);
+}
+.ap-sidebar .ap-brand::before {
+  content: "■";
+  color: var(--accent);
+  font-size: 10px;
+}
+.ap-sidebar .ap-brand .dim { color: var(--text-dim); font-weight: 400; margin-left: 4px; font-size: var(--t-xs); }
+
+.ap-sidebar h4 {
+  padding: 0 var(--space-4);
+  font-size: var(--t-2xs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-dim);
-  margin: 0 0 var(--space-3);
+  margin: var(--space-3) 0 var(--space-2);
 }
 .ap-sidebar ul {
   list-style: none;
   padding: 0;
-  margin: 0 0 var(--space-5);
+  margin: 0;
 }
-.ap-sidebar li { margin-bottom: var(--space-2); }
+.ap-sidebar li { margin: 0; }
 .ap-sidebar a {
+  display: block;
+  padding: 5px var(--space-4) 5px var(--space-5);
   color: var(--text-dim);
   text-decoration: none;
-  font-family: var(--body-family);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.5;
-  padding: var(--space-2) var(--space-3);
-  display: block;
-  border-radius: 4px;
-  transition: all 0.15s;
+  font-family: var(--font);
+  font-size: var(--t-sm);
+  line-height: 1.4;
+  border-left: 2px solid transparent;
+  transition: all 0.12s;
 }
 .ap-sidebar a:hover { color: var(--text-main); background: var(--accent-dim); }
 .ap-sidebar a.current {
   color: var(--accent);
   background: var(--accent-dim);
-  font-weight: 600;
+  border-left-color: var(--accent);
+}
+
+.ap-sidebar-spacer { flex: 1; }
+.ap-sidebar .footnote {
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: var(--t-2xs);
+  letter-spacing: 0.04em;
 }
 
 /* =========================================================
-   ARTICLE (main content)
+   MAIN — breadcrumb compacto + article
    ========================================================= */
-.ap-article {
-  max-width: var(--max-content);
+.ap-main {
+  padding: var(--space-5) var(--space-7) var(--space-9);
+  max-width: var(--content-w);
 }
+@media (max-width: 880px) {
+  .ap-main { padding: var(--space-5) var(--space-4) var(--space-7); }
+}
+
+.ap-breadcrumb {
+  font-size: var(--t-2xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin: 0 0 var(--space-5);
+  padding: 0;
+  max-width: none;
+}
+.ap-breadcrumb a { color: var(--text-dim); text-decoration: none; }
+.ap-breadcrumb a:hover { color: var(--text-main); }
+.ap-breadcrumb .sep { color: var(--accent); margin: 0 8px; }
+.ap-breadcrumb .current { color: var(--text-main); }
+
+/* =========================================================
+   ARTICLE
+   ========================================================= */
 .ap-article-header {
-  margin-bottom: var(--space-7);
-  padding-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-4);
   border-bottom: 1px solid var(--border);
 }
 .ap-eyebrow {
-  font-family: var(--ui-family);
-  font-size: var(--ui-size);
+  font-size: var(--t-2xs);
   font-weight: 600;
-  letter-spacing: var(--ui-tracking);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--accent);
   margin: 0 0 var(--space-3);
 }
 .ap-article h1 {
-  font-family: var(--h1-family);
-  font-weight: var(--h1-weight);
-  font-size: var(--h1-size);
-  line-height: var(--h1-lh);
-  letter-spacing: var(--h1-tracking);
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: var(--t-h1);
+  line-height: var(--lh-heading);
+  letter-spacing: 0;
   color: var(--text-main);
   margin: 0 0 var(--space-3);
 }
 .ap-lead {
-  font-family: var(--body-family);
-  font-size: 18px;
-  line-height: 1.6;
+  font-family: var(--font);
+  font-size: var(--t-base);
+  line-height: var(--lh-body);
   color: var(--text-dim);
-  margin: 0 0 var(--space-5);
+  margin: 0 0 var(--space-4);
   font-weight: 400;
 }
 .ap-meta-row {
   display: flex;
-  gap: var(--space-4);
+  gap: var(--space-3);
   flex-wrap: wrap;
   align-items: center;
-  font-family: var(--ui-family);
-  font-size: var(--ui-size);
-  letter-spacing: var(--ui-tracking);
+  font-size: var(--t-2xs);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-dim);
+  font-weight: 600;
 }
 .ap-meta-row .tag {
   display: inline-block;
-  padding: 3px 10px;
+  padding: 2px 8px;
   background: var(--accent-dim);
   border: 1px solid var(--border);
   border-radius: 999px;
-  font-size: var(--ui-size);
+  font-size: var(--t-2xs);
   color: var(--text-dim);
   text-decoration: none;
-  font-weight: 500;
-  font-family: var(--ui-family);
+  font-weight: 600;
+  font-family: var(--font);
   transition: all 0.15s;
 }
 .ap-meta-row .tag:hover { color: var(--text-main); border-color: var(--accent); }
 .ap-meta-row .dot { color: var(--accent); }
 
-/* Article body typography */
+/* Article body */
 .ap-article h2 {
-  font-family: var(--h2-family);
-  font-weight: var(--h2-weight);
-  font-size: var(--h2-size);
-  line-height: var(--h2-lh);
-  letter-spacing: var(--h2-tracking);
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: var(--t-h2);
+  line-height: var(--lh-heading);
   color: var(--text-main);
-  margin-top: var(--space-8);
-  margin-bottom: var(--space-4);
+  margin-top: var(--space-7);
+  margin-bottom: var(--space-3);
 }
 .ap-article h3 {
-  font-family: var(--h3-family);
-  font-weight: var(--h3-weight);
-  font-size: var(--h3-size);
-  line-height: var(--h3-lh);
-  color: var(--text-main);
-  margin-top: var(--space-6);
-  margin-bottom: var(--space-3);
-}
-.ap-article h4 {
-  font-family: var(--h3-family);
+  font-family: var(--font);
   font-weight: 600;
-  font-size: 16px;
+  font-size: var(--t-h3);
+  line-height: var(--lh-heading);
   color: var(--text-main);
   margin-top: var(--space-5);
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+.ap-article h4 {
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: var(--t-h4);
+  color: var(--text-dim);
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 .ap-article p {
-  font-family: var(--body-family);
-  font-size: var(--body-size);
-  font-weight: var(--body-weight);
-  line-height: var(--body-lh);
+  font-family: var(--font);
+  font-size: var(--t-base);
+  font-weight: 400;
+  line-height: var(--lh-body);
   color: var(--text-main);
-  margin: 0 0 var(--space-4);
+  margin: 0 0 var(--space-3);
 }
 .ap-article ul, .ap-article ol {
-  font-family: var(--body-family);
-  font-size: var(--body-size);
-  line-height: var(--body-lh);
+  font-family: var(--font);
+  font-size: var(--t-base);
+  line-height: var(--lh-body);
   color: var(--text-main);
   padding-left: var(--space-5);
-  margin: 0 0 var(--space-4);
+  margin: 0 0 var(--space-3);
 }
-.ap-article li { margin-bottom: var(--space-2); }
+.ap-article li { margin-bottom: 4px; }
 .ap-article li::marker { color: var(--accent); }
 .ap-article a {
   color: var(--success);
   text-decoration: underline;
   text-decoration-color: var(--accent);
   text-underline-offset: 3px;
-  font-weight: 500;
 }
 .ap-article a:hover { color: var(--text-main); text-decoration-color: var(--success); }
 .ap-article strong { color: var(--text-main); font-weight: 700; }
 .ap-article em { font-style: italic; color: var(--text-dim); }
 
 .ap-article code {
-  font-family: var(--code-family);
-  background: var(--bg-sidebar);
+  font-family: var(--font);
+  background: var(--bg-main);
   border: 1px solid var(--border);
   padding: 1px 6px;
   border-radius: 3px;
-  font-size: 0.9em;
+  font-size: 0.92em;
   color: var(--text-main);
 }
 .ap-article pre {
   background: var(--bg-sidebar);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: var(--space-4) var(--space-5);
+  border-radius: 4px;
+  padding: var(--space-3) var(--space-4);
   overflow-x: auto;
-  font-family: var(--code-family);
-  font-size: var(--code-size);
-  line-height: 1.6;
-  margin: var(--space-4) 0;
+  font-family: var(--font);
+  font-size: var(--t-sm);
+  line-height: 1.55;
+  margin: var(--space-3) 0;
 }
 .ap-article pre code {
   background: transparent;
   border: none;
   padding: 0;
-  font-size: var(--code-size);
+  font-size: var(--t-sm);
   color: var(--text-main);
 }
 
 .ap-article blockquote {
-  margin: var(--space-5) 0;
-  padding: var(--space-3) var(--space-5);
+  margin: var(--space-4) 0;
+  padding: var(--space-2) var(--space-4);
   border-left: 3px solid var(--accent);
   background: var(--bg-sidebar);
   border-radius: 0 4px 4px 0;
   color: var(--text-dim);
-  font-family: var(--h1-family);
+  font-family: var(--font);
   font-style: italic;
-  font-size: 20px;
-  line-height: 1.5;
-  font-weight: 500;
+  font-size: var(--t-base);
+  line-height: var(--lh-body);
+  font-weight: 400;
 }
 
 .ap-article table {
   width: 100%;
   border-collapse: collapse;
-  margin: var(--space-5) 0;
-  font-family: var(--body-family);
-  font-size: 14px;
+  margin: var(--space-4) 0;
+  font-family: var(--font);
+  font-size: var(--t-sm);
 }
 .ap-article th, .ap-article td {
   text-align: left;
-  padding: var(--space-3) var(--space-4);
+  padding: 8px 12px;
   border-bottom: 1px solid var(--border);
 }
 .ap-article th {
-  font-family: var(--ui-family);
   color: var(--text-dim);
   font-weight: 600;
-  font-size: var(--ui-size);
-  letter-spacing: var(--ui-tracking);
+  font-size: var(--t-2xs);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   background: var(--bg-sidebar);
   border-bottom: 1px solid var(--accent);
@@ -425,45 +399,53 @@ html, body {
 .ap-article hr {
   border: none;
   border-top: 1px solid var(--border);
-  margin: var(--space-7) 0;
+  margin: var(--space-6) 0;
 }
 
 /* =========================================================
    FOOTER
    ========================================================= */
 .ap-article-footer {
-  margin-top: var(--space-8);
-  padding-top: var(--space-5);
+  margin-top: var(--space-7);
+  padding-top: var(--space-4);
   border-top: 1px solid var(--border);
-  font-family: var(--ui-family);
-  font-size: var(--ui-size);
+  font-size: var(--t-2xs);
   color: var(--text-dim);
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
-.ap-article-footer .tags { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.ap-article-footer .tags { display: flex; gap: 6px; flex-wrap: wrap; }
 .ap-article-footer .meta {
   display: flex;
-  gap: var(--space-4);
+  gap: var(--space-3);
   align-items: center;
-  letter-spacing: var(--ui-tracking);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  font-weight: 600;
 }
 .ap-article-footer .meta .accent { color: var(--accent); }
 
 /* =========================================================
-   GLOBAL SCROLLBAR
+   SCROLLBAR + SELECTION
    ========================================================= */
-::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: var(--bg-sidebar); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
-/* =========================================================
-   SELECTION
-   ========================================================= */
 ::selection { background: var(--accent); color: var(--accent-text); }
+
+/* =========================================================
+   LEGACY classes still used by wiki-home / tema-home / gate
+   (the .ap-page grid class still exists for tema-home alternative path)
+   ========================================================= */
+.ap-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-5);
+  display: block;
+}
 
 </style>
 
