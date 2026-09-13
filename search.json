@@ -1,5 +1,16 @@
 [
   {
+    "title": "Máquina Parada",
+    "tema": "2026-09-harness",
+    "tags": [
+      "harness",
+      "protegido"
+    ],
+    "date": "2026-09-13",
+    "snippet": "Artefato protegido por senha (AES-GCM). Conteúdo não indexado.",
+    "url": "research/2026-09-harness/artifacts/maquina-parada/"
+  },
+  {
     "title": "Pricing Strategy Playbook",
     "tema": "2026-05-strategy",
     "tags": [],
