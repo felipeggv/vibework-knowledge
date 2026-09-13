@@ -1,5 +1,17 @@
 [
   {
+    "title": "Duas Versões à Frente",
+    "tema": "2026-09-harness",
+    "tags": [
+      "harness",
+      "lifeos",
+      "protegido"
+    ],
+    "date": "2026-09-13",
+    "snippet": "Artefato protegido por senha (AES-GCM). Conteúdo não indexado.",
+    "url": "research/2026-09-harness/artifacts/duas-versoes-a-frente/"
+  },
+  {
     "title": "Máquina Parada",
     "tema": "2026-09-harness",
     "tags": [
