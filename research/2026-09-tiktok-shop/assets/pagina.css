@@ -1,0 +1,351 @@
+/* pagina.css — camada da propria pagina.
+   Regra unica: so compoe tokens --vita-*. Nenhum valor literal de cor, fonte,
+   espacamento ou raio mora aqui. Se um valor nao existe como token, a pagina
+   esta inventando — o certo e usar a classe do components.css que ja resolve. */
+
+body {
+  margin: var(--vita-space-0);
+  background-color: var(--vita-color-bg-canvas);
+  color: var(--vita-color-text-default);
+  font-family: var(--vita-font-family-sans);
+}
+
+/* O vt-prose para no h3, e a abertura tem um nivel a mais (`###`). Sem esta
+   regra o h4 cai na fonte padrao do navegador no meio de uma pagina DM Sans.
+   Continua a mesma escala do vt-prose h3, um degrau abaixo. */
+.vt-prose h4 {
+  margin-top: var(--vita-space-6);
+  font-family: var(--vita-font-family-display);
+  font-weight: var(--vita-font-weight-semibold);
+  font-size: var(--vita-text-size-lg);
+  line-height: var(--vita-text-leading-snug);
+  color: var(--vita-color-text-strong);
+}
+
+/* Cada pergunta e uma <section> com id proprio (`p-01`), pra dar link direto.
+   O vt-prose empilha por filho direto, entao a secao repete a mesma regra por
+   dentro — mesmo token, mesmo ritmo. */
+.vt-qa {
+  scroll-margin-top: var(--vita-space-11);
+}
+.vt-qa > * + * {
+  margin-top: var(--vita-space-5);
+}
+
+/* Embrulho da tabela. As 39 tabelas do documento tem ate 5 colunas e celulas de
+   264 caracteres; numa tela de celular elas nao cabem. Sem este embrulho quem
+   sai andando pro lado e a PAGINA — o cabecalho vai junto e a pessoa se perde.
+   Com ele, so o bloco rola. `tabindex` no HTML faz a area rolar tambem pelo
+   teclado, que e o que a regra de acessibilidade pede de uma caixa que rola. */
+.vt-tabela {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+.vt-tabela:focus-visible {
+  outline: none;
+  border-radius: var(--vita-radius-sm);
+  box-shadow: var(--vita-shadow-focus);
+}
+
+/* No celular a tabela para de se espremer e passa a rolar: sem um piso de
+   largura o navegador encolhe as colunas ate a palavra quebrar letra a letra,
+   que e ilegivel e nao e rolagem. O piso e o container-sm do design system. */
+@media (max-width: 60rem) {
+  .vt-tabela table {
+    min-width: var(--vita-size-container-sm);
+  }
+}
+
+/* Trilho das 31 perguntas. A lista nao cabe na altura da tela: em vez de
+   esticar a pagina, ela rola por dentro do proprio trilho pegajoso. O desconto
+   cobre o `top` do vt-article__aside e sobra uma folga embaixo. */
+.vt-toc--perguntas {
+  max-height: calc(100vh - var(--vita-space-13));
+  overflow-y: auto;
+}
+
+/* O trilho e um <details>. No computador ele fica aberto pra sempre: o
+   <summary> e so o titulo de antes, sem triangulo e sem clique — `pointer-events`
+   e o que impede um toque de fechar a barra lateral. No celular ele volta a ser
+   um <summary> de verdade (ver a regra de 60rem la embaixo). */
+.vt-toc__caixa > summary {
+  list-style: none;
+  pointer-events: none;
+}
+.vt-toc__caixa > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Onde a pessoa esta agora. Marcado pelo IntersectionObserver da pagina. */
+.vt-toc__link[aria-current='true'] {
+  color: var(--vita-color-text-brand);
+  font-weight: var(--vita-font-weight-semibold);
+  border-left-color: var(--vita-color-brand-default);
+}
+
+/* No celular a barra lateral vira menu. Tres coisas mudam:
+   - `order` sobe o trilho pra cima do texto — um indice no rodape nao e indice;
+   - o <summary> volta a ser clicavel e ganha de volta o triangulo NATIVO do
+     navegador (nenhum glifo desenhado aqui: o proprio <details> ja tem um);
+   - a altura maxima sai de cena, porque o trilho nao e mais pegajoso — quem
+     limita a lista aberta e o proprio dedo da pessoa rolando a pagina.
+   Ponto de quebra igual ao do .vt-article__layout, que e quem tira a coluna. */
+@media (max-width: 60rem) {
+  .vt-article__aside {
+    order: -1;
+  }
+  .vt-toc--perguntas {
+    max-height: none;
+    overflow-y: visible;
+  }
+  .vt-toc__caixa > summary {
+    list-style: revert;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+  .vt-toc__caixa > summary::-webkit-details-marker {
+    display: revert;
+  }
+  .vt-toc__caixa:not([open]) > summary {
+    margin-bottom: var(--vita-space-0);
+  }
+}
+
+/* Selo de origem — de onde veio a resposta, no topo de cada pergunta.
+   A cor e o formato sao do atomo .vt-tag do design system (um tom por origem);
+   aqui mora so a linha que segura o selo e a nota que as vezes vem ao lado. */
+.vt-selo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--vita-space-3);
+}
+.vt-selo__nota {
+  font-size: var(--vita-text-size-sm);
+  line-height: var(--vita-text-leading-snug);
+  color: var(--vita-color-text-muted);
+}
+
+/* Legenda dos selos, no topo da pagina: a chave pra ler os 31 selos abaixo
+   sem precisar do texto. Mesma largura do cabecalho editorial. */
+.vt-selos {
+  max-width: var(--vita-size-container-md);
+  margin: var(--vita-space-0) auto var(--vita-space-9);
+  padding: var(--vita-space-6);
+  border: var(--vita-border-width-thin) solid var(--vita-color-border-subtle);
+  border-radius: var(--vita-radius-lg);
+  background-color: var(--vita-color-bg-subtle);
+}
+.vt-selos__titulo {
+  margin: var(--vita-space-0) var(--vita-space-0) var(--vita-space-5);
+  font-family: var(--vita-font-family-sans);
+  font-weight: var(--vita-font-weight-semibold);
+  font-size: var(--vita-text-size-xs);
+  letter-spacing: var(--vita-text-tracking-wide);
+  text-transform: uppercase;
+  color: var(--vita-color-text-muted);
+}
+
+/* Duas colunas na propria lista, e cada item entra nela com `display: contents`:
+   assim os cinco selos dividem a mesma coluna e as explicacoes alinham. */
+.vt-selos__lista {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: center;
+  gap: var(--vita-space-3) var(--vita-space-5);
+  margin: var(--vita-space-0);
+  padding: var(--vita-space-0);
+  list-style: none;
+}
+.vt-selos__item {
+  display: contents;
+}
+.vt-selos__texto {
+  font-size: var(--vita-text-size-sm);
+  line-height: var(--vita-text-leading-snug);
+  color: var(--vita-color-text-default);
+}
+
+/* Na largura de celular o selo nao divide linha com a explicacao: a coluna de
+   pilulas comeria a tela. Mesmo ponto de quebra do vt-article__layout. */
+@media (max-width: 60rem) {
+  .vt-selos__lista {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--vita-space-5);
+  }
+  .vt-selos__item {
+    display: grid;
+    justify-items: start;
+    gap: var(--vita-space-2);
+  }
+}
+
+/* Galeria de prints — no fim de cada pergunta. O que a grade mostra e a
+   MINIATURA (o topo do print, 480px), nunca o arquivo cheio: sao 117 capturas,
+   39,5 MB, e 28 delas passam de 10 mil px de altura. */
+.vt-prints {
+  margin: var(--vita-space-0);
+  padding-top: var(--vita-space-2);
+}
+.vt-prints__titulo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--vita-space-3);
+  margin-bottom: var(--vita-space-4);
+  font-weight: var(--vita-font-weight-semibold);
+  font-size: var(--vita-text-size-xs);
+  letter-spacing: var(--vita-text-tracking-wide);
+  text-transform: uppercase;
+  color: var(--vita-color-text-muted);
+}
+.vt-prints__dica {
+  font-weight: var(--vita-font-weight-regular);
+  letter-spacing: var(--vita-text-tracking-normal);
+  text-transform: none;
+}
+
+/* auto-fill com minmax: a grade se ajeita sozinha na largura que tiver. */
+.vt-prints__grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: var(--vita-space-5);
+  margin: var(--vita-space-0);
+  padding: var(--vita-space-0);
+  list-style: none;
+}
+.vt-prints__item {
+  margin: var(--vita-space-0);
+}
+
+/* No celular, uma coluna so. O auto-fill ja daria uma coluna a 390px, mas entre
+   390 e 960 ele daria duas ou tres — e meia tela de largura pra uma captura de
+   pagina inteira nao mostra nada. Mesmo ponto de quebra do resto. */
+@media (max-width: 60rem) {
+  .vt-prints__grade {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* `.vt-prints .vt-print` e nao `.vt-print`: a galeria mora dentro do .vt-prose,
+   e `.vt-prose a` (sublinhado, verde) ganha de um seletor de uma classe so.
+   O cartao nao e um link de texto — sublinhado dentro do quadro parece defeito. */
+.vt-prints .vt-print {
+  display: block;
+  overflow: hidden;
+  border: var(--vita-border-width-thin) solid var(--vita-color-border-subtle);
+  border-radius: var(--vita-radius-md);
+  background-color: var(--vita-color-bg-subtle);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--vita-motion-duration-fast) var(--vita-motion-easing-standard),
+    box-shadow var(--vita-motion-duration-fast) var(--vita-motion-easing-standard);
+}
+.vt-prints .vt-print:hover,
+.vt-prints .vt-print:focus-visible {
+  border-color: var(--vita-color-border-brand);
+  box-shadow: var(--vita-shadow-md);
+}
+.vt-prints .vt-print:focus-visible {
+  outline: none;
+  box-shadow: var(--vita-shadow-focus);
+}
+
+/* A miniatura ja vem recortada no topo pelo mapear-prints.py; aqui ela so
+   preenche a largura da celula. `aspect-ratio` vem do width/height do atributo,
+   entao o espaco fica reservado antes de a imagem chegar. */
+.vt-print__mini {
+  display: block;
+  width: 100%;
+  height: auto;
+  background-color: var(--vita-color-bg-muted);
+}
+.vt-print__rotulo {
+  display: block;
+  padding: var(--vita-space-3) var(--vita-space-4);
+  border-top: var(--vita-border-width-thin) solid var(--vita-color-border-subtle);
+  background-color: var(--vita-color-bg-canvas);
+  font-size: var(--vita-text-size-sm);
+  line-height: var(--vita-text-leading-snug);
+  color: var(--vita-color-text-default);
+}
+
+/* Sobreposicao do print em tamanho cheio. O <dialog> ocupa a tela inteira e e
+   transparente: assim o clique fora da caixa cai nele e fecha.
+
+   `box-sizing` nao e enfeite: o design system nao tem reset, entao `width: 100%`
+   mais `padding` davam 422px numa tela de 390 — o botao Fechar ficava metade
+   pra fora, no celular, que e justo onde nao da pra arrastar pra alcancar. */
+.vt-lightbox {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  margin: var(--vita-space-0);
+  padding: var(--vita-space-5);
+  border: var(--vita-border-width-none);
+  background: none;
+  overflow: hidden;
+}
+.vt-lightbox::backdrop {
+  background-color: var(--vita-color-bg-inverse);
+  opacity: 0.85;
+}
+.vt-lightbox__caixa {
+  display: flex;
+  flex-direction: column;
+  max-width: var(--vita-size-container-lg);
+  height: 100%;
+  margin: var(--vita-space-0) auto;
+  border-radius: var(--vita-radius-lg);
+  background-color: var(--vita-color-bg-canvas);
+  box-shadow: var(--vita-shadow-lg);
+  overflow: hidden;
+}
+.vt-lightbox__barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vita-space-5);
+  padding: var(--vita-space-4) var(--vita-space-5);
+  border-bottom: var(--vita-border-width-thin) solid var(--vita-color-border-subtle);
+  background-color: var(--vita-color-bg-subtle);
+}
+.vt-lightbox__rotulo {
+  margin: var(--vita-space-0);
+  font-weight: var(--vita-font-weight-semibold);
+  font-size: var(--vita-text-size-sm);
+  line-height: var(--vita-text-leading-snug);
+  color: var(--vita-color-text-strong);
+}
+.vt-lightbox__fechar {
+  flex: none;
+  padding: var(--vita-space-2) var(--vita-space-4);
+  border: var(--vita-border-width-thin) solid var(--vita-color-border-default);
+  border-radius: var(--vita-radius-pill);
+  background-color: var(--vita-color-bg-canvas);
+  font-family: var(--vita-font-family-sans);
+  font-weight: var(--vita-font-weight-medium);
+  font-size: var(--vita-text-size-sm);
+  color: var(--vita-color-text-strong);
+  cursor: pointer;
+}
+.vt-lightbox__fechar:hover {
+  border-color: var(--vita-color-border-brand);
+  color: var(--vita-color-text-brand);
+}
+
+/* O palco rola: um print de pagina inteira tem 16 mil px de altura, e "tamanho
+   cheio" e justamente poder descer por ele. */
+.vt-lightbox__palco {
+  flex: 1;
+  overflow: auto;
+  overscroll-behavior: contain;
+  background-color: var(--vita-color-bg-muted);
+}
+.vt-lightbox__img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
