@@ -8,3 +8,5 @@
 URL: https://felipeggv.github.io/vibework-knowledge/research/2026-09-harness/artifacts/maquina-parada/
 
 URL: https://felipeggv.github.io/vibework-knowledge/research/2026-09-harness/artifacts/duas-versoes-a-frente/
+
+- `anatomia-comparada` (full, ✓ AES-GCM) → https://felipeggv.github.io/vibework-knowledge/research/2026-09-harness/artifacts/anatomia-comparada/ — 2026-09-14
