@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contrato Final — Terreno Aracê (Alquimia x Felipe Gobbi)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root {
+        --bg-main:     #161716;
+    --bg-sidebar:  #121212;
+    --bg-activity: #222522;
+    --border:      #181616;
+    --text-main:   #f2ebc0;
+    --text-dim:    #cec8ba;
+    --accent:      #5b675b;
+    --accent-dim:  #1f2b1f;
+    --accent-text: #ffffff;
+    --success:     #bed78e;
+    --warning:     #d0a795;
+    --error:       #ff5555;
+    --accent-bright: #7a8a7a;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg-main); color: var(--text-main); font-family: var(--font-mono); font-size: 13.5px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+
+  #ap-app { min-height: 100vh; }
+  .ap-grid { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+  @media (max-width: 900px) { .ap-grid { grid-template-columns: 1fr; } .ap-sidebar { display: none; } }
+
+  .ap-sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border); padding: 32px 20px; position: sticky; top: 0; max-height: 100vh; overflow-y: auto; }
+  .ap-sidebar .ap-brand { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px; }
+  .ap-sidebar .ap-brand-name { font-size: 0.95rem; font-weight: 700; color: var(--text-main); margin-bottom: 24px; }
+  .ap-sidebar .ap-brand-name .accent { color: var(--accent); }
+  .ap-sidebar .ap-toc-title { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); margin: 20px 0 10px; }
+  .ap-toc { list-style: none; padding: 0; margin: 0; }
+  .ap-toc a { display: block; padding: 6px 10px; color: var(--text-dim); text-decoration: none; font-size: 0.82rem; border-left: 2px solid transparent; transition: all 0.15s; }
+  .ap-toc a:hover { color: var(--text-main); background: var(--accent-dim); }
+  .ap-toc a.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-dim); }
+  .ap-kbd-hint { margin-top: 20px; padding: 12px; border: 1px solid var(--border); background: var(--bg-main); font-size: 0.7rem; color: var(--text-dim); }
+  .ap-kbd { display: inline-block; padding: 1px 5px; background: var(--accent-dim); border: 1px solid var(--border); border-radius: 2px; font-size: 0.65rem; color: var(--text-main); }
+
+  .ap-main { padding: 40px 56px 80px; max-width: 980px; }
+  @media (max-width: 900px) { .ap-main { padding: 32px 24px 60px; } }
+
+  .ap-header { border-bottom: 1px solid var(--border); padding-bottom: 24px; margin-bottom: 32px; }
+  .ap-crumb { color: var(--text-dim); font-size: 0.72rem; letter-spacing: 0.08em; margin-bottom: 12px; text-transform: uppercase; }
+  .ap-crumb .accent { color: var(--accent); }
+  .ap-main h1 { font-size: 1.8rem; font-weight: 700; margin: 0 0 12px; letter-spacing: -0.02em; }
+  .ap-meta-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+  .ap-pill { display: inline-block; padding: 2px 10px; background: var(--accent-dim); border: 1px solid var(--border); color: var(--text-dim); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .ap-status { padding: 3px 10px; background: rgba(190, 215, 142, 0.12); border: 1px solid var(--success); color: var(--success); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+  .ap-header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ap-btn-sm { padding: 5px 12px; background: transparent; border: 1px solid var(--border); color: var(--text-dim); font: inherit; font-size: 0.75rem; cursor: pointer; letter-spacing: 0.05em; }
+  .ap-btn-sm:hover { border-color: var(--accent); color: var(--text-main); }
+
+  .ap-main section { margin-bottom: 48px; scroll-margin-top: 20px; }
+  .ap-main h2 { font-size: 1.05rem; font-weight: 600; margin: 0 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.06em; cursor: pointer; user-select: none; display: flex; align-items: center; gap: 8px; }
+  .ap-main h2::before { content: "▸"; color: var(--accent); transition: transform 0.2s; }
+  .ap-main h2.collapsed::before { transform: rotate(-90deg); }
+  .ap-main h2.collapsed + * { display: none; }
+  .ap-main h3 { font-size: 0.92rem; font-weight: 600; margin: 22px 0 10px; color: var(--text-dim); letter-spacing: 0.04em; }
+  .ap-main p { margin: 0 0 14px; }
+  .ap-main ul, .ap-main ol { padding-left: 22px; }
+  .ap-main li { margin-bottom: 6px; }
+  .ap-main li::marker { color: var(--accent); }
+  .ap-main a { color: var(--accent); text-decoration: underline; text-decoration-color: var(--border); text-underline-offset: 3px; }
+  .ap-main a:hover { color: var(--success); text-decoration-color: var(--success); }
+  .ap-main code { background: var(--bg-sidebar); border: 1px solid var(--border); padding: 1px 6px; font-size: 0.85em; }
+  .ap-main pre { background: var(--bg-sidebar); border: 1px solid var(--border); padding: 16px 18px; overflow-x: auto; font-size: 0.8rem; line-height: 1.55; margin: 14px 0; position: relative; }
+  .ap-main pre code { background: transparent; border: none; padding: 0; color: var(--text-main); }
+  .ap-main pre .ap-copy-btn { position: absolute; top: 8px; right: 8px; padding: 4px 10px; background: var(--bg-activity); border: 1px solid var(--border); color: var(--text-dim); font: inherit; font-size: 0.7rem; cursor: pointer; opacity: 0; transition: opacity 0.15s; letter-spacing: 0.05em; text-transform: uppercase; }
+  .ap-main pre:hover .ap-copy-btn { opacity: 1; }
+  .ap-copy-btn:hover { color: var(--text-main); border-color: var(--accent); }
+  .ap-copy-btn.copied { color: var(--success); border-color: var(--success); }
+  .ap-main table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.85rem; }
+  .ap-main th, .ap-main td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--border); }
+  .ap-main th { background: var(--bg-activity); color: var(--text-dim); font-weight: 600; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: 1px solid var(--accent); cursor: pointer; user-select: none; }
+  .ap-main tr:hover td { background: var(--accent-dim); }
+  .ap-main strong { color: var(--text-main); font-weight: 700; }
+  .ap-main blockquote { margin: 16px 0; padding: 12px 18px; border-left: 3px solid var(--accent); background: var(--bg-sidebar); color: var(--text-dim); }
+
+  .ap-mermaid-wrap { background: var(--bg-sidebar); border: 1px solid var(--border); padding: 20px; margin: 14px 0; overflow-x: auto; }
+  .ap-mermaid-wrap .mermaid { display: flex; justify-content: center; }
+
+  #ap-palette-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 100; align-items: flex-start; justify-content: center; padding-top: 80px; }
+  #ap-palette-bg.open { display: flex; }
+  #ap-palette { width: 100%; max-width: 520px; background: var(--bg-sidebar); border: 1px solid var(--accent); box-shadow: 0 24px 60px rgba(0,0,0,0.7); }
+  #ap-palette input { width: 100%; padding: 14px 18px; background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--text-main); font: inherit; font-size: 0.95rem; outline: none; }
+  #ap-palette-results { max-height: 340px; overflow-y: auto; }
+  #ap-palette-results .item { padding: 10px 18px; cursor: pointer; display: flex; align-items: center; gap: 10px; color: var(--text-dim); font-size: 0.85rem; }
+  #ap-palette-results .item:hover, #ap-palette-results .item.selected { background: var(--accent-dim); color: var(--text-main); }
+  #ap-palette-results .item::before { content: "›"; color: var(--accent); }
+
+  .ap-toast { position: fixed; bottom: 24px; right: 24px; padding: 10px 16px; background: var(--bg-sidebar); border: 1px solid var(--success); color: var(--success); font-size: 0.82rem; opacity: 0; transform: translateY(20px); transition: all 0.25s; pointer-events: none; z-index: 200; }
+  .ap-toast.show { opacity: 1; transform: translateY(0); }
+
+  .ap-footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.75rem; text-align: center; letter-spacing: 0.05em; }
+  .ap-footer .accent { color: var(--accent); }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg-sidebar); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+</style>
+</head>
+<body>
+
+
+<div id="ap-app">
+<div class="ap-grid">
+
+  <aside class="ap-sidebar">
+    <div class="ap-brand">vibework-knowledge</div>
+    <div class="ap-brand-name">contrato-final-terreno-arace<span class="accent">.</span>full</div>
+
+    <div class="ap-toc-title">Seções</div>
+    <ul class="ap-toc" id="ap-toc">
+      <li><a href="#instrumento-particular-de-contraprestação-de-cessão-de-direitos-reconhecimento-de-crédito-garantias-opção-de-recompra-e-retrocessão-por-liquidez-e-opção-de-conversão-em-sociedade">INSTRUMENTO PARTICULAR DE CONTRAPRESTAÇÃO DE CESSÃO DE DIREITOS, RECONHECIMENTO DE CRÉDITO, GARANTIAS, OPÇÃO DE RECOMPRA E RETROCESSÃO POR LIQUIDEZ E OPÇÃO DE CONVERSÃO EM SOCIEDADE</a></li>
+<li><a href="#anexo-i-demonstrativo-do-valor-investido-contraprestação-e-simulações-vinculantes">ANEXO I – DEMONSTRATIVO DO VALOR INVESTIDO, CONTRAPRESTAÇÃO E SIMULAÇÕES VINCULANTES</a></li>
+    </ul>
+
+    <div class="ap-toc-title">Atalhos</div>
+    <div class="ap-kbd-hint">
+      <div><span class="ap-kbd">⌘ K</span> command palette</div>
+      <div style="margin-top:4px"><span class="ap-kbd">click h2</span> colapsa</div>
+      <div style="margin-top:4px"><span class="ap-kbd">esc</span> fecha palette</div>
+    </div>
+  </aside>
+
+  <main class="ap-main">
+    <header class="ap-header">
+      <div class="ap-crumb">
+        vibework-knowledge <span class="accent">›</span>
+        research <span class="accent">›</span>
+        2026-10-terreno-arace <span class="accent">›</span>
+        contrato-final-terreno-arace
+      </div>
+      <h1>Contrato Final — Terreno Aracê (Alquimia x Felipe Gobbi)</h1>
+      <div class="ap-meta-bar">
+        <span class="ap-pill">2026-10-20</span>
+        <span class="ap-pill">mode: full</span>
+        <span class="ap-pill">interactive</span>
+        <span class="ap-status">live</span>
+      </div>
+      <div class="ap-header-actions">
+        <button class="ap-btn-sm" id="ap-collapse-all">▾ collapse all</button>
+        <button class="ap-btn-sm" id="ap-expand-all">▸ expand all</button>
+        <button class="ap-btn-sm" onclick="apOpenPalette()">⌘K palette</button>
+      </div>
+    </header>
+
+    <h1 id="contrato-final-instrumento-particular-alquimia-x-felipe-gobbi-terreno-aracê-pedra-azul">Contrato Final — Instrumento Particular Alquimia x Felipe Gobbi (Terreno Aracê / Pedra Azul)</h1>
+<blockquote><strong>Arquivos Finais para Download Direto:</strong> - <strong><a href="./Termo_Alquimia_Felipe_Contraprestacao_Cessao.docx">📥 Baixar Contrato Final Word — Termo_Alquimia_Felipe_Contraprestacao_Cessao.docx</a></strong> <em>(Assinam apenas Felipe e Fábio/Alquimia — com Cláusula 5ª de Recompra pelo CDI Puro e Tabelas D.1, D.2 e E)</em> - <strong><a href="./Cessao_e_Aditivo_Assemblage_Alquimia_Felipe.pdf">📄 Baixar Contrato Loteadora — Cessao_e_Aditivo_Assemblage_Alquimia_Felipe.pdf</a></strong> - <strong><a href="./Cessao_Posicao_Associativa_ACRAA_Alquimia_Felipe.pdf">📄 Baixar Contrato Condomínio — Cessao_Posicao_Associativa_ACRAA_Alquimia_Felipe.pdf</a></strong></blockquote>
+<hr>
+<h2 id="instrumento-particular-de-contraprestação-de-cessão-de-direitos-reconhecimento-de-crédito-garantias-opção-de-recompra-e-retrocessão-por-liquidez-e-opção-de-conversão-em-sociedade">INSTRUMENTO PARTICULAR DE CONTRAPRESTAÇÃO DE CESSÃO DE DIREITOS, RECONHECIMENTO DE CRÉDITO, GARANTIAS, OPÇÃO DE RECOMPRA E RETROCESSÃO POR LIQUIDEZ E OPÇÃO DE CONVERSÃO EM SOCIEDADE</h2>
+<p>Pelo presente instrumento particular, as partes abaixo qualificadas:</p>
+<p><strong>ALQUIMIA DE VENDAS LTDA.</strong>, pessoa jurídica de direito privado, inscrita no CNPJ/MF sob o n.º 39.610.442/0001-95, com sede na Rua Francisco Rubim, n.º 269, Loja 01, Bento Ferreira, Vitória, ES, CEP 29.050-680, neste ato representada por seu sócio administrador <strong>FABIO SOUZA OLIVEIRA</strong>, brasileiro, convivente em união estável, portador da CI n.º 0201461647 DIC/RJ, inscrito no CPF/MF sob o n.º 095.025.367-70, residente e domiciliado na Rua Aleixo Netto, n.º 845, apto. 802, Praia do Canto, Vitória, ES, CEP 29.055-280, doravante denominada <strong>“Alquimia”</strong> ou <strong>“Cedente”</strong>;</p>
+<p><strong>FELIPE GOMES GOBBI VERZOLA</strong>, brasileiro, casado, empresário, nascido em 10/07/1990, portador da CI n.º 2.322.851 SSP/ES, inscrito no CPF/MF sob o n.º 129.648.827-62, residente e domiciliado na Avenida Estudante José Júlio de Souza, n.º 1.900, Ed. Mar das Antilhas, apto. 701-A, Praia de Itaparica, Vila Velha, ES, CEP 29.102-010, e-mail felipeggv@gmail.com, doravante denominado <strong>“Felipe”</strong> ou <strong>“Cessionário”</strong>;</p>
+<p>têm entre si justo e contratado o presente instrumento (<strong>“Instrumento”</strong>), que se regerá pelas cláusulas seguintes.</p>
+<h3 id="considerandos">CONSIDERANDOS</h3>
+<ul><li><strong>(i)</strong> em 07 de julho de 2025, a Alquimia celebrou com <strong>ASSEMBLAGE PARTICIPAÇÕES LTDA.</strong>, CNPJ 52.607.131/0001-35 (<strong>“Assemblage”</strong>), Instrumento Particular de Promessa de Compra e Venda de Imóvel Rural (<strong>“Contrato”</strong>) tendo por objeto o imóvel rural denominado “Reserva da Mata”, Módulo Rural n.º 9 do Setor Pomar Rosa da Reserva Alta Vista, medindo 20.004,78 m², situado na Rodovia ES-165, Volta Peçanha, Distrito de Aracê, Domingos Martins, ES, objeto da matrícula n.º 17.374 do Cartório de Registro de Imóveis de Domingos Martins, ES (<strong>“Imóvel”</strong>), pelo preço de R$ 800.000,00, pago mediante entrada de R$ 150.000,00 e 30 parcelas mensais atualizadas pelo CDI;</li><li><strong>(ii)</strong> nesta data, a Alquimia cedeu ao Felipe a integralidade de sua posição contratual no Contrato, com a anuência da Assemblage, por meio do Instrumento Particular de Cessão de Direitos e Obrigações, com Anuência, e Aditivo (<strong>“Instrumento de Cessão”</strong>), cujo item 1.3 estabelece que a contraprestação da cessão é ajustada entre Cedente e Cessionário em instrumento apartado, que é o presente Instrumento;</li><li><strong>(iii)</strong> nesta data, a Alquimia cedeu também ao Felipe sua posição de associada titular da Associação Comunidade da Reserva Alta Vista – ACRAA, vinculada ao Imóvel (<strong>“Cessão Associativa”</strong>);</li><li><strong>(iv)</strong> a Alquimia pagou à Assemblage, por conta do preço do Contrato, o valor total de R$ 430.522,87 (quatrocentos e trinta mil, quinhentos e vinte e dois reais e oitenta e sete centavos), discriminado no Anexo I (<strong>“Valor Investido”</strong>), sendo parte dos pagamentos realizada diretamente por seu sócio Fabio Souza Oliveira e pela sociedade Vendedorismo Solutions Ltda., por conta e ordem da Alquimia, conforme instrumentos próprios de mútuo e reconhecimento de dívida entre estes e a Alquimia, que não são objeto deste Instrumento;</li><li><strong>(v)</strong> a Alquimia não pretende prosseguir com o pagamento das parcelas vincendas do Contrato e decidiu ceder sua posição pelo custo histórico, sem ágio, oportunidade de negócio que o Felipe aceita; e</li><li><strong>(vi)</strong> as Partes têm a intenção de desenvolver futuramente, em conjunto, empreendimento no Imóvel, o que fica regulado neste Instrumento por meio da opção de conversão prevista na Cláusula Sexta;</li></ul>
+<p><strong>RESOLVEM</strong> as Partes celebrar o presente Instrumento, nos seguintes termos:</p>
+<hr>
+<h3 id="cláusula-primeira-do-objeto">CLÁUSULA PRIMEIRA – DO OBJETO</h3>
+<p><strong>1.1. Objeto.</strong> Este Instrumento tem por objeto (a) fixar a contraprestação devida pelo Cessionário à Cedente pela cessão objeto do Instrumento de Cessão e da Cessão Associativa; (b) reconhecer o saldo credor da Cedente contra o Cessionário; (c) instituir as garantias desse crédito; (d) regular a opção de saída e recompra obrigatória pela Cedente (retrocessão com devolução corrigida por 100% do CDI puro, sem ágio) em caso de restrição de liquidez do Cessionário; e (e) instituir a opção de conversão do crédito em participação no empreendimento a ser desenvolvido no Imóvel.</p>
+<hr>
+<h3 id="cláusula-segunda-da-contraprestação">CLÁUSULA SEGUNDA – DA CONTRAPRESTAÇÃO</h3>
+<p><strong>2.1. Valor.</strong> A contraprestação total da cessão é de <strong>R$ 430.522,87</strong> (quatrocentos e trinta mil, quinhentos e vinte e dois reais e oitenta e sete centavos), equivalente ao Valor Investido pela Cedente, sem ágio nem deságio (<strong>“Contraprestação”</strong>).</p>
+<p><strong>2.2. Forma de pagamento.</strong> A Contraprestação será paga da seguinte forma:</p>
+<ul><li><strong>(a) R$ 150.000,00</strong> (cento e cinquenta mil reais), à vista, no ato da assinatura deste Instrumento, mediante transferência para a conta de titularidade da Alquimia no Banco Sicoob (756), agência 3001, conta corrente 266.085-7, chave PIX CNPJ 39.610.442/0001-95 (<strong>“Parcela à Vista”</strong>);</li><li><strong>(b) R$ 15.453,57</strong> (quinze mil, quatrocentos e cinquenta e três reais e cinquenta e sete centavos), mediante pagamento, pelo Cessionário, por conta e ordem da Cedente, de obrigações desta referentes ao período anterior à cessão (<strong>“Parcela em Assunção”</strong>), sendo: (i) <strong>R$ 2.593,56</strong> de multa e juros incidentes sobre os Valores em Aberto do Contrato (conforme definido no Instrumento de Cessão), pagos diretamente à Assemblage no prazo do Instrumento de Cessão; e (ii) <strong>R$ 12.860,01</strong> de débitos associativos vencidos de fevereiro a outubro de 2026, pagos diretamente à ACRAA em até 10 dias úteis; e</li><li><strong>(c) R$ 265.069,30</strong> (duzentos e sessenta e cinco mil, sessenta e nove reais e trinta centavos), que o Cessionário reconhece dever à Cedente, nos termos da Cláusula Terceira (<strong>“Saldo Credor”</strong>).</li></ul>
+<p><strong>2.3. Ajuste.</strong> O Valor Investido inclui o PIX de R$ 730,00 realizado pela Alquimia à Assemblage em 06/11/2025, em complemento da 4ª parcela do Contrato, cujo comprovante integra o Anexo II do Instrumento de Cessão. Caso a Assemblage não reconheça esse pagamento como quitação do complemento da 4ª parcela e o Cessionário o pague à Assemblage nos Valores em Aberto (acrescendo R$ 730,00 ao principal e R$ 98,55 a multa e juros), a Contraprestação reduz-se automaticamente para <strong>R$ 429.792,87</strong>, a Parcela em Assunção ajusta-se para <strong>R$ 15.552,12</strong> e o Saldo Credor ajusta-se para <strong>R$ 264.240,75</strong>, independentemente de aditivo.</p>
+<p><strong>2.4. Custo de aquisição.</strong> A Cedente declara que a Contraprestação corresponde ao custo de aquisição dos direitos cedidos registrado em sua contabilidade, não havendo ganho de capital na cessão.</p>
+<p><strong>2.5. Condição.</strong> A falta de pagamento da Parcela à Vista no ato da assinatura, ou dos Valores em Aberto à Assemblage no prazo do Instrumento de Cessão, resolve de pleno direito este Instrumento.</p>
+<hr>
+<h3 id="cláusula-terceira-do-saldo-credor">CLÁUSULA TERCEIRA – DO SALDO CREDOR</h3>
+<p><strong>3.1. Reconhecimento.</strong> O Cessionário reconhece, de forma irrevogável e irretratável, ser devedor da Cedente do Saldo Credor, líquido, certo e exigível, atribuindo a este Instrumento a eficácia de título executivo extrajudicial (art. 784, III, do Código de Processo Civil).</p>
+<p><strong>3.2. Atualização.</strong> O Saldo Credor será atualizado pela variação do IPCA/IBGE a partir desta data, sem incidência de juros remuneratórios, acrescendo-se a ele eventuais valores que a Cedente vier a pagar nos termos da Cláusula Quinta, atualizados pelo mesmo índice desde cada desembolso.</p>
+<p><strong>3.3. Vencimento.</strong> O Saldo Credor vencerá na primeira das seguintes datas: (a) 30 (trinta) dias após o término do prazo de opção do item 6.1 sem que a opção tenha sido exercida, ou após comunicação escrita da Cedente renunciando à opção; (b) alienação, cessão ou oneração do Imóvel ou dos direitos do Contrato pelo Cessionário a terceiro; ou (c) rescisão do Contrato por inadimplemento do Cessionário.</p>
+<p><strong>3.4. Formas de liquidação.</strong> O Saldo Credor poderá ser liquidado (a) em dinheiro, total ou parcialmente, a qualquer tempo, sem penalidade; ou (b) mediante exercício, pela Cedente, da opção de conversão prevista na Cláusula Sexta.</p>
+<p><strong>3.5. Mora.</strong> O atraso no pagamento do Saldo Credor sujeita o Cessionário a multa de 2%, juros de mora de 1% ao mês e honorários advocatícios de 10%.</p>
+<hr>
+<h3 id="cláusula-quarta-das-garantias">CLÁUSULA QUARTA – DAS GARANTIAS</h3>
+<p><strong>4.1. Cessão em garantia da restituição.</strong> Em garantia do Saldo Credor, o Cessionário cede à Cedente os direitos à restituição de valores que vier a ter contra a Assemblage em caso de rescisão do Contrato, até o limite do Saldo Credor atualizado, ficando a Assemblage autorizada a pagar diretamente à Cedente.</p>
+<p><strong>4.2. Vedação de cessão e oneração.</strong> Enquanto não liquidado o Saldo Credor, o Cessionário não poderá ceder, prometer ceder, alienar, onerar ou dar em garantia o Imóvel ou os direitos do Contrato sem prévia anuência escrita da Cedente, salvo se o produto da operação for destinado prioritariamente à quitação integral do Saldo Credor.</p>
+<p><strong>4.3. Alienação fiduciária.</strong> Quitado o preço do Contrato e outorgada a escritura do Imóvel ao Cessionário, e não liquidado ou convertido o Saldo Credor, o Cessionário obriga-se, em até 30 dias da solicitação da Cedente, a constituir alienação fiduciária do Imóvel em garantia do Saldo Credor, nos termos da Lei n.º 9.514/1997, em fração ideal ou com compartilhamento de grau compatível com a proporção do Saldo Credor no valor do Imóvel.</p>
+<hr>
+<h3 id="cláusula-quinta-do-botão-de-saída-por-liquidez-recompra-obrigatória-pela-cedente-pelo-cdi-puro-e-retirada-do-nome-do-cessionário">CLÁUSULA QUINTA – DO BOTÃO DE SAÍDA POR LIQUIDEZ (RECOMPRA OBRIGATÓRIA PELA CEDENTE PELO CDI PURO E RETIRADA DO NOME DO CESSIONÁRIO)</h3>
+<p><strong>5.1. Comunicação e Carência Inicial até 31/12/2026.</strong> O Cessionário enviará à Cedente o comprovante de cada pagamento realizado à Assemblage em até 5 (cinco) dias úteis do vencimento. Observado o <strong>período de carência inicial até 31 de dezembro de 2026</strong>, caso a partir de <strong>01 de janeiro de 2027</strong> (e antes de a Cedente converter seu crédito em sociedade) o Cessionário decida não prosseguir no negócio por restrição de liquidez ou conveniência financeira, poderá acionar a Opção de Recompra e Saída mediante notificação escrita enviada à Cedente com antecedência mínima de 30 (trinta) dias.</p>
+<p><strong>5.2. Obrigação de Recompra e Retirada do Nome do Cessionário em até 30 Dias (Botão de Eject).</strong> Enviada a notificação de saída pelo Cessionário (a qualquer tempo após 31/12/2026), a Cedente — e solidariamente seu sócio administrador Fabio Souza Oliveira — <strong>obriga-se a recomprar a posição contratual e assinar, no prazo máximo de 30 (trinta) dias corridos da notificação, os instrumentos de retrocessão reassumindo a titularidade exclusiva do Contrato perante a Assemblage e da posição associativa perante a ACRAA, retirando o nome e o CPF do Cessionário do polo de comprador/devedor do Imóvel e exonerando-o de todas as parcelas vincendas posteriores, sem que caiba ao Cessionário qualquer obrigação de buscar ou efetuar venda a terceiros</strong>.</p>
+<p><strong>5.3. Valor da Recompra (Devolução Integral Corrigida por 100% do CDI Puro, Sem Ágio e Sem Desvalorização).</strong> Pela Recompra, <strong>o Cessionário abre mão de qualquer participação na valorização imobiliária, ágio ou lucro futuro do Imóvel</strong> (que permanecerá 100% em benefício da Cedente), e a Cedente obriga-se a restituir ao Cessionário 100% (cem por cento) de todos os valores que saíram efetivamente do bolso do Cessionário até a data da retrocessão — compreendendo: (i) a Parcela à Vista (<code>R$ 150.000,00</code>); (ii) os Valores em Aberto pagos à Assemblage (<code>R$ 80.161,87</code>); (iii) os débitos pagos à ACRAA (<code>R$ 12.860,01</code>); e (iv) todas as parcelas mensais subsequentes pagas à Assemblage e taxas associativas da ACRAA —, sendo cada desembolso atualizado desde a data do respectivo pagamento efetivo até a data da efetiva devolução <strong>exclusivamente por 100% (cem por cento) da variação acumulada do CDI</strong> (mesmo indexador do Contrato junto à Assemblage), conforme demonstrado nas <strong>Tabelas D.1 e D.2 do Anexo I</strong>, sem cobrança de ágio adicional e vedada qualquer redução ou desvalorização.</p>
+<p><strong>5.4. Extinção Automática do Saldo Credor na Recompra (Vedação Expressa de Duplo Desconto).</strong> Operada a Recompra e a transferência do Contrato de volta para o nome da Cedente, o Saldo Credor previsto na Cláusula Terceira (<code>R$ 265.069,30</code> ou <code>R$ 264.240,75</code> conforme Cláusula 2.3) <strong>extingue-se automaticamente de pleno direito na mesma data (<code>R$ 0,00</code>)</strong>, voltando a Cedente a ser titular exclusiva dos <code>R$ 429.792,87</code> (ou <code>R$ 430.522,87</code>) originalmente pagos por ela à Assemblage e de toda a valorização do Imóvel. <strong>Em nenhuma hipótese o Saldo Credor será abatido ou descontado do Valor de Recompra devido ao Cessionário.</strong></p>
+<p><strong>5.5. Prazos e Cronograma de Pagamento da Recompra (Entrada à Vista em 30 Dias + 4 Parcelas Mensais).</strong> A Cedente pagará o Valor Total de Recompra ao Cessionário observando rigorosamente os seguintes prazos e condições, exemplificados no Anexo I:</p>
+<ul><li><strong>(a) Prazo 1 – Em até 30 (trinta) dias corridos da notificação (na assinatura da retrocessão, ou em até 5 dias úteis do recebimento, pela Cedente ou por seu sócio, dos recursos da venda de imóvel próprio, o que ocorrer primeiro):</strong> pagamento à vista do valor integral correspondente à Parcela à Vista atualizada por 100% do CDI acumulado desde 19/10/2026 (<code>R$ 150.000,00 + 100% do CDI</code>), momento em que o Contrato volta para o nome da Cedente e esta reassume 100% dos boletos seguintes junto à Assemblage e à ACRAA;</li><li><strong>(b) Prazo 2 – Em 30, 60, 90 e 120 dias contados da assinatura da retrocessão (4 parcelas mensais iguais):</strong> pagamento do saldo remanescente da recompra (correspondente aos <code>R$ 80.161,87</code> dos Valores em Aberto da Assemblage + <code>R$ 12.860,01</code> da ACRAA + todas as parcelas mensais pagas pelo Cessionário à Assemblage e à ACRAA) dividido em <strong>4 (quatro) parcelas mensais, iguais e sucessivas</strong>, todas corrigidas por 100% do CDI até a data do efetivo crédito na conta do Cessionário, constituindo este Instrumento título executivo extrajudicial (art. 784, III, do CPC) garantido pelos direitos aquisitivos do próprio Imóvel até a quitação da 4ª parcela.</li></ul>
+<p><strong>5.6. Direito de Assunção Preventiva pela Cedente.</strong> Caso o Cessionário incorra em atraso superior a 10 (dez) dias no pagamento de qualquer parcela vincenda junto à Assemblage sem ter enviado a notificação do item 5.1, a Cedente poderá (a) quitar a parcela em atraso diretamente à Assemblage, somando esse desembolso ao seu investimento líquido para o Encontro de Contas (Cláusula 6.5), ou (b) convocar a Recompra e Retrocessão nos exatos termos, valores corrigidos pelo CDI e prazos dos itens 5.2 a 5.5.</p>
+<hr>
+<h3 id="cláusula-sexta-da-opção-de-conversão-e-do-empreendimento-conjunto-sociedade-5050">CLÁUSULA SEXTA – DA OPÇÃO DE CONVERSÃO E DO EMPREENDIMENTO CONJUNTO (SOCIEDADE 50/50)</h3>
+<p><strong>6.1. Opção.</strong> A Cedente terá a opção, exercível por comunicação escrita no prazo de 1 (um) ano contado da assinatura deste Instrumento (até 19/10/2027), de converter a integralidade do Saldo Credor em participação societária de 50% (cinquenta por cento) em sociedade empresária a ser constituída ou utilizada pelas Partes (<strong>“Sociedade”</strong>) para ser titular do Imóvel e nele desenvolver empreendimento imobiliário, turístico, hoteleiro ou de eventos.</p>
+<p><strong>6.2. Integralização.</strong> Exercida a opção, o Cessionário aportará à Sociedade o Imóvel ou os direitos do Contrato, e a Cedente integralizará sua participação de 50% (cinquenta por cento) mediante conferência e quitação integral do Saldo Credor, operando-se a extinção da dívida da Cláusula Terceira, combinada com a equalização financeira obrigatória prevista nos itens 6.5 e 6.6.</p>
+<p><strong>6.3. Regras da Sociedade.</strong> As regras de governança, aportes, distribuição de resultados e saída serão fixadas em contrato social e acordo de sócios a serem celebrados em até 60 (sessenta) dias do exercício da opção, observados, no mínimo: (a) participação igualitária de 50% para cada Parte no capital votante e total; (b) administração conjunta nas matérias relevantes (alienação ou oneração do Imóvel, endividamento, aprovação do projeto e orçamento do empreendimento, entrada de novos sócios); e (c) direito de preferência recíproco e cláusula de compra e venda forçada (<em>shotgun</em>) em caso de impasse grave.</p>
+<p><strong>6.4. Não exercício.</strong> Não exercida a opção no prazo de 1 (um) ano, e não tendo havido a Recompra da Cláusula Quinta, o Saldo Credor permanece exigível na forma e no prazo da Cláusula Terceira (vencimento em 19/11/2027).</p>
+<p><strong>6.5. Encontro de Contas Simétrico (Balança 50/50).</strong> Para que as participações societárias de 50% (cinquenta por cento) correspondam a desembolsos financeiros exatamente iguais no Imóvel, na constituição da Sociedade as Partes apurarão o Investimento Líquido de cada uma, atualizados pelo mesmo índice (IPCA/IBGE), conforme demonstrado na <strong>Tabela E do Anexo I</strong>:</p>
+<ul><li><strong>(a) Investimento Líquido da Alquimia:</strong> Valor Investido reconhecido pela Assemblage (<code>R$ 429.792,87</code>, ou <code>R$ 430.522,87</code> conforme item 2.3), MENOS a Parcela à Vista já recebida em dinheiro (<code>R$ 150.000,00</code>) e a Parcela em Assunção paga pelo Felipe (<code>R$ 15.552,12</code> / <code>R$ 15.453,57</code>), resultando no capital líquido de <code>R$ 264.240,75</code> (ou <code>R$ 265.069,30</code>), mais eventuais parcelas pagas nos termos do item 5.6;</li><li><strong>(b) Investimento Líquido do Felipe:</strong> soma de tudo o que saiu efetivamente do bolso do Felipe para o negócio: Parcela à Vista (<code>R$ 150.000,00</code>) + Valores em Aberto pagos à Assemblage (<code>R$ 80.161,87</code>) + débitos ACRAA (<code>R$ 12.860,01</code>) — que já somam <code>R$ 243.021,88</code> no Dia 0 — MAIS todas as parcelas mensais vincendas pagas pelo Felipe à Assemblage (da 16ª em diante) e taxas da ACRAA até a data da conversão.</li></ul>
+<p><strong>6.6. Equalização Financeira 50/50.</strong> Somam-se os dois investimentos líquidos (item 6.5 'a' e 'b') e divide-se o total por 2 (dois) para obter a Cota Ideal de 50% de cada sócio. A Parte que tiver desembolsado menos pagará à outra a diferença até igualar a Cota Ideal de 50% (metade da diferença entre os dois desembolsos), podendo a Alquimia liquidar esse ajuste mediante: (a) devolução, total ou parcial, da Parcela à Vista ao Felipe; (b) assunção exclusiva das próximas parcelas vincendas da Assemblage até igualar a conta; ou (c) aporte adicional na Sociedade em favor do Felipe.</p>
+<p><strong>6.7. Parcelas posteriores.</strong> Equalizados os desembolsos em 50/50, as parcelas restantes do Contrato que vencerem após a constituição da Sociedade serão pagas na proporção de 50% (cinquenta por cento) por cada sócio.</p>
+<hr>
+<h3 id="cláusulas-sétima-a-nona-declarações-confidencialidade-e-disposições-gerais">CLÁUSULAS SÉTIMA A NONA – DECLARAÇÕES, CONFIDENCIALIDADE E DISPOSIÇÕES GERAIS</h3>
+<p><strong>7.1. Integralidade.</strong> As Partes declaram que este Instrumento, o Instrumento de Cessão e a Cessão Associativa contêm a totalidade dos ajustes entre elas sobre o Imóvel e os direitos do Contrato, e que não há outro acordo, verbal ou escrito, sobre o mesmo objeto.</p>
+<p><strong>7.2. Cessionário.</strong> O Cessionário declara conhecer o Contrato, o Instrumento de Cessão, a Cessão Associativa e o Anexo I, e dispor de recursos próprios para cumprir as obrigações assumidas.</p>
+<p><strong>7.3. Registros.</strong> A Cedente registrará este Instrumento em sua contabilidade, e as Partes declararão os direitos e obrigações dele decorrentes na forma da legislação fiscal.</p>
+<p><strong>8.1. Confidencialidade.</strong> As Partes manterão sigilo sobre os termos comerciais deste Instrumento perante terceiros, ressalvadas as divulgações a assessores jurídicos e contábeis, às autoridades fiscais, a órgãos judiciais e administrativos e as exigidas por lei, por ordem judicial ou em processos de que qualquer das Partes ou seus sócios sejam parte.</p>
+<p><strong>9.1. Irrevogabilidade.</strong> Este Instrumento é celebrado em caráter irrevogável e irretratável, obrigando as Partes e seus sucessores.</p>
+<p><strong>9.2. Registro.</strong> Qualquer das Partes poderá registrar este Instrumento no Registro de Títulos e Documentos, para conservação e eficácia perante terceiros.</p>
+<p><strong>9.3. Tolerância.</strong> A tolerância de qualquer das Partes não constitui novação, renúncia ou precedente.</p>
+<p><strong>9.4. Assinatura eletrônica.</strong> As Partes admitem a assinatura deste Instrumento por meio eletrônico com certificado ICP-Brasil ou plataforma que garanta autoria e integridade (art. 10, §2º, da MP 2.200-2/2001).</p>
+<p><strong>9.5. Foro.</strong> Fica eleito o foro da Comarca de Vitória, ES, para dirimir quaisquer questões oriundas deste Instrumento.</p>
+<hr>
+<h2 id="anexo-i-demonstrativo-do-valor-investido-contraprestação-e-simulações-vinculantes">ANEXO I – DEMONSTRATIVO DO VALOR INVESTIDO, CONTRAPRESTAÇÃO E SIMULAÇÕES VINCULANTES</h2>
+<h3 id="a-pagamentos-realizados-à-assemblage-por-conta-do-contrato-histórico-alquimia">A. Pagamentos realizados à Assemblage por conta do Contrato (Histórico Alquimia)</h3>
+<p><em>(Tabela original de 15 itens totalizando <code>R$ 430.522,87</code> / <code>R$ 429.792,87</code> conforme Cláusula 2.3)</em></p>
+<h3 id="b-composição-da-contraprestação">B. Composição da Contraprestação</h3>
+<ul><li><strong>(a) Parcela à Vista – Felipe → Alquimia:</strong> <code>R$ 150.000,00</code></li><li><strong>(b.1) Multa e juros dos Valores em Aberto (responsabilidade da Alquimia, pagos pelo Felipe):</strong> <code>R$ 2.593,56</code> <em>(ou <code>R$ 2.692,11</code> / <code>R$ 2.769,51</code> conforme Cl. 2.3)</em></li><li><strong>(b.2) Débitos ACRAA fev–out/2026 (responsabilidade da Alquimia, pagos pelo Felipe):</strong> <code>R$ 12.860,01</code></li><li><strong>(c) Saldo Credor – Felipe deve à Alquimia (Cláusula Terceira):</strong> <code>R$ 265.069,30</code> <em>(ou <code>R$ 264.240,75</code> conforme Cl. 2.3)</em></li><li><strong>Contraprestação total = Valor Investido:</strong> <code>R$ 430.522,87</code> <em>(ou <code>R$ 429.792,87</code>)</em></li></ul>
+<h3 id="c-obrigações-assumidas-pelo-felipe-perante-terceiros-não-integram-a-contraprestação">C. Obrigações assumidas pelo Felipe perante terceiros (não integram a Contraprestação)</h3>
+<ul><li><strong>Principal dos Valores em Aberto do Contrato (13ª, 14ª e 15ª parcelas):</strong> <code>R$ 76.641,21</code> / <code>R$ 77.392,36</code></li><li><strong>15 parcelas vincendas do Contrato (16ª a 30ª):</strong> conforme Contrato (16ª = <code>R$ 26.018,78</code> em <code>05/11/2026</code>)</li></ul>
+<hr>
+<h3 id="d-simulações-práticas-vinculantes-e-cronograma-de-prazos-botão-de-saída-recompra-pelo-cdi-puro-cláusula-quinta">D. Simulações Práticas Vinculantes e Cronograma de Prazos – Botão de Saída / Recompra pelo CDI Puro (Cláusula Quinta)</h3>
+<p><strong>Regra Geral e Prazos (Itens 5.1 a 5.5):</strong> Após a <strong>carência inicial até 31/12/2026</strong>, se o Felipe acionar o Botão de Saída: <strong>(1)</strong> o Felipe <strong>ABRE MÃO</strong> de qualquer valorização/ágio do terreno (que fica 100% para a Alquimia); <strong>(2)</strong> em até <strong>30 dias do aviso</strong>, o Contrato na Assemblage e na ACRAA <strong>SAI DO NOME DO FELIPE</strong> e volta para o nome da Alquimia; <strong>(3)</strong> na mesma data, o Saldo Credor (<code>R$ 264.240,75</code> / <code>R$ 265.069,30</code>) <strong>MORRE AUTOMATICAMENTE (<code>R$ 0,00</code>)</strong>; e <strong>(4)</strong> a Alquimia devolve 100% do que saiu do bolso do Felipe corrigido exclusivamente por <strong>100% do CDI</strong> (~1,00% a.m.), sendo os <code>R$ 150k + CDI</code> à vista na retrocessão (até 30 dias do aviso) e o restante em <strong>4 parcelas mensais iguais</strong> (em 30, 60, 90 e 120 dias da retrocessão):</p>
+<h4 id="tabela-d1-exemplo-1-felipe-aciona-a-saída-no-3º-mês-19012027">Tabela D.1 – Exemplo 1: Felipe aciona a saída no 3º Mês (<code>19/01/2027</code>)</h4>
+<table><thead><tr><th>Desembolso Realizado pelo Felipe</th><th>Data Base</th><th>Valor Pago (R$)</th><th>100% do CDI Puro (~1% a.m.)</th><th>Valor de Recompra (R$)</th></tr></thead><tbody><tr><td><strong>1.</strong> Parcela à Vista (PIX pago à Alquimia)</td><td>19/10/2026</td><td>150.000,00</td><td>+ 3,03% (3m)</td><td><strong>154.545,15</strong></td></tr><tr><td><strong>2.</strong> Quitação Atrasados Assemblage (13ª a 15ª + encargos)</td><td>19/10/2026</td><td>80.161,87</td><td>+ 3,03% (3m)</td><td><strong>82.590,85</strong></td></tr><tr><td><strong>3.</strong> Quitação Condomínio ACRAA em atraso (Fev–Out/26)</td><td>19/10/2026</td><td>12.860,01</td><td>+ 3,03% (3m)</td><td><strong>13.249,68</strong></td></tr><tr><td><strong>4.</strong> 16ª Parcela Assemblage + Condomínio ACRAA (Mês 1)</td><td>05/11/2026</td><td>27.258,78</td><td>+ 2,01% (2m)</td><td><strong>27.806,68</strong></td></tr><tr><td><strong>5.</strong> 17ª Parcela Assemblage + Condomínio ACRAA (Mês 2)</td><td>05/12/2026</td><td>27.518,97</td><td>+ 1,00% (1m)</td><td><strong>27.794,16</strong></td></tr><tr><td><strong>6.</strong> 18ª Parcela Assemblage + Condomínio ACRAA (Mês 3)</td><td>05/01/2027</td><td>27.781,76</td><td>+ 0,50% (0,5m)</td><td><strong>27.920,67</strong></td></tr><tr><td><strong>TOTAL A RECEBER PELO FELIPE NA SAÍDA (MÊS 3)</strong></td><td><strong>19/01/2027</strong></td><td><strong>325.581,39</strong></td><td><strong>+ 8.325,80</strong></td><td><strong>333.907,19</strong></td></tr><tr><td><strong>Ágio / Lucro de Valorização do Terreno</strong></td><td><strong>Fica 100% c/ Alquimia</strong></td><td><strong>R$ 0,00 cobrado</strong></td><td><strong>Sem laudo / sem ágio</strong></td><td><strong>100% da Alquimia</strong></td></tr><tr><td><strong>Titularidade do Contrato na Assemblage e ACRAA</strong></td><td><strong>Até 18/02/2027</strong></td><td><strong>Sai do nome do Felipe</strong></td><td><strong>Volta p/ Alquimia</strong></td><td><strong>Felipe 100% Exonerado</strong></td></tr><tr><td><strong>Saldo Credor da Alquimia (R$ 264.240,75 / R$ 265.069,30)</strong></td><td><strong>Extinto (Cl. 5.4)</strong></td><td><strong>—</strong></td><td><strong>Extinto na Recompra</strong></td><td><strong>0,00 (Cancelado)</strong></td></tr></tbody></table>
+<h4 id="tabela-d2-cronograma-de-datas-e-pagamentos-exemplos-de-saída-no-3º-mês-e-no-6º-mês">Tabela D.2 – Cronograma de Datas e Pagamentos (Exemplos de Saída no 3º Mês e no 6º Mês)</h4>
+<table><thead><tr><th>Etapa / Prazo Contratual (Cl. 5.5)</th><th>Exemplo 1: Aviso em <code>19/01/2027</code> (3º Mês — Desembolsou <code>R$ 325.581,39</code>)</th><th>Exemplo 2: Aviso em <code>19/04/2027</code> (6º Mês — Desembolsou <code>R$ 409.521,88</code>)</th></tr></thead><tbody><tr><td><strong>1. Notificação de Saída (após carência de <code>31/12/2026</code>)</strong></td><td><strong><code>19/01/2027</code></strong> (aviso por escrito)</td><td><strong><code>19/04/2027</code></strong> (aviso por escrito)</td></tr><tr><td><strong>2. Até 30 dias do aviso: Assinatura da Retrocessão + Entrada à Vista (<code>R$ 150k + CDI</code>)</strong></td><td><strong>Até <code>18/02/2027</code>:</strong> Terreno sai do nome do Felipe, dívida de <code>R$ 264,2k</code> morre e Alquimia paga <strong><code>R$ 154.545,15</code> à vista</strong></td><td><strong>Até <code>19/05/2027</code>:</strong> Terreno sai do nome do Felipe, dívida de <code>R$ 264,2k</code> morre e Alquimia paga <strong><code>R$ 159.228,00</code> à vista</strong></td></tr><tr><td><strong>3. 1ª Parcela (30 dias após a retrocessão)</strong></td><td><strong><code>18/03/2027</code>:</strong> <code>R$ 44.840,51</code> (+ CDI do período)</td><td><strong><code>19/06/2027</code>:</strong> <code>R$ 67.655,50</code> (+ CDI do período)</td></tr><tr><td><strong>4. 2ª Parcela (60 dias após a retrocessão)</strong></td><td><strong><code>18/04/2027</code>:</strong> <code>R$ 44.840,51</code> (+ CDI do período)</td><td><strong><code>19/07/2027</code>:</strong> <code>R$ 67.655,50</code> (+ CDI do período)</td></tr><tr><td><strong>5. 3ª Parcela (90 dias após a retrocessão)</strong></td><td><strong><code>18/05/2027</code>:</strong> <code>R$ 44.840,51</code> (+ CDI do período)</td><td><strong><code>19/08/2027</code>:</strong> <code>R$ 67.655,50</code> (+ CDI do período)</td></tr><tr><td><strong>6. 4ª e Última Parcela (120 dias após a retrocessão)</strong></td><td><strong><code>18/06/2027</code>:</strong> <code>R$ 44.840,51</code> (+ CDI do período)</td><td><strong><code>19/09/2027</code>:</strong> <code>R$ 67.655,50</code> (+ CDI do período)</td></tr><tr><td><strong>TOTAL DEVOLVIDO AO FELIPE (100% + CDI PURO)</strong></td><td><strong><code>R$ 333.907,19</code></strong> (+ CDI das 4 parcelas)</td><td><strong><code>R$ 429.850,00</code></strong> (+ CDI das 4 parcelas)</td></tr></tbody></table>
+<hr>
+<h3 id="e-simulação-prática-vinculante-balança-5050-na-conversão-em-sociedade-cláusulas-65-e-66">E. Simulação Prática Vinculante – Balança 50/50 na Conversão em Sociedade (Cláusulas 6.5 e 6.6)</h3>
+<table><thead><tr><th>Conta da Balança 50/50 (Cláusulas 6.5 e 6.6)</th><th>Cenário E.1: Fábio vira sócio 50/50 no Mês 6 (Abr/2027)</th><th>Cenário E.2: Fábio vira sócio 50/50 no Mês 12 (Out/2027)</th></tr></thead><tbody><tr><td><strong>1. Dinheiro Líquido da Alquimia no Terreno</strong> (<code>R$ 429.792,87</code> menos <code>R$ 150.000,00</code> de PIX e <code>R$ 15.552,12</code> de encargos = <code>R$ 264.240,75</code> + IPCA)</td><td><strong>R$ 270.186,17 (39% do total)</strong></td><td><strong>R$ 276.131,58 (31% do total)</strong></td></tr><tr><td><strong>2. Dinheiro Líquido que saiu do bolso do Felipe</strong> (<code>R$ 243.021,88</code> no Dia 0 + parcelas mensais pagas sozinho pelo Felipe + IPCA)</td><td><strong>R$ 418.736,12 (61% do total)</strong></td><td><strong>R$ 601.875,15 (69% do total)</strong></td></tr><tr><td><strong>3. Total Já Pago no Terreno pelos Dois Somados</strong> (<code>Linha 1 + Linha 2</code>)</td><td><strong>R$ 688.922,29 (100%)</strong></td><td><strong>R$ 878.006,73 (100%)</strong></td></tr><tr><td><strong>4. Quanto CADA SÓCIO deveria ter pago para ter 50%</strong> (<code>Linha 3 ÷ 2</code>)</td><td><strong>R$ 344.461,15 cada (50%)</strong></td><td><strong>R$ 439.003,37 cada (50%)</strong></td></tr><tr><td><strong>5. O que acontece com a dívida de R$ 264.240,75 do Felipe?</strong></td><td><strong>MORRE (R$ 0,00)</strong> – vira os R$ 270,1k da Alquimia</td><td><strong>MORRE (R$ 0,00)</strong> – vira os R$ 276,1k da Alquimia</td></tr><tr><td><strong>6. Diferença que a Alquimia devolve/equaliza ao Felipe para ficarem 50/50</strong> (<code>Linha 2 menos Linha 4</code>)</td><td><strong>Alquimia paga R$ 74.274,97 ao Felipe</strong></td><td><strong>Alquimia paga R$ 162.871,78 ao Felipe</strong></td></tr></tbody></table>
+
+    <footer class="ap-footer">
+      <span class="accent">vibework-knowledge</span> · full · maestro-theme snapshot 2026-10-20 · skill <code>artifacts-publisher</code>
+    </footer>
+  </main>
+
+</div>
+</div>
+
+<div id="ap-palette-bg" onclick="apClosePalette(event)">
+  <div id="ap-palette" onclick="event.stopPropagation()">
+    <input type="text" id="ap-palette-input" placeholder="ir para seção, ação..." autocomplete="off">
+    <div id="ap-palette-results"></div>
+  </div>
+</div>
+
+<div class="ap-toast" id="ap-toast">copiado</div>
+
+
+
+
+<script>
+// Mount content (after gate or directly if no gate)
+(function() {
+  const tpl = document.getElementById('ap-content-tpl');
+  if (!tpl) return;
+  const mount = document.getElementById('ap-content-mount');
+  if (mount) {
+    mount.innerHTML = tpl.innerHTML;
+    mount.style.display = 'none';
+  } else {
+    document.body.appendChild(tpl.content.cloneNode(true));
+    apInit();
+  }
+})();
+
+function apInit() {
+  apInitMermaid();
+  apInitCollapse();
+  apInitCopyButtons();
+  apInitTOC();
+  apInitPalette();
+  apInjectCopyButtons();
+}
+
+function apInjectCopyButtons() {
+  document.querySelectorAll('.ap-main pre').forEach(pre => {
+    if (pre.querySelector('.ap-copy-btn')) return;
+    const btn = document.createElement('button');
+    btn.className = 'ap-copy-btn';
+    btn.textContent = 'copy';
+    pre.appendChild(btn);
+  });
+}
+
+function apInitMermaid() {
+  if (!window.mermaid) return;
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'base',
+    themeVariables: {
+      background: '#121212',
+      primaryColor: '#1f2b1f',
+      primaryTextColor: '#f2ebc0',
+      primaryBorderColor: '#5b675b',
+      lineColor: '#5b675b',
+      secondaryColor: '#222522',
+      tertiaryColor: '#161716',
+      fontFamily: 'JetBrains Mono, monospace',
+      fontSize: '13px'
+    }
+  });
+  // Wrap inline mermaid blocks (```mermaid → .mermaid-wrap > .mermaid)
+  document.querySelectorAll('pre code.language-mermaid').forEach(code => {
+    const wrap = document.createElement('div');
+    wrap.className = 'ap-mermaid-wrap';
+    const inner = document.createElement('div');
+    inner.className = 'mermaid';
+    inner.textContent = code.textContent;
+    wrap.appendChild(inner);
+    code.closest('pre').replaceWith(wrap);
+  });
+  mermaid.run({ querySelector: '.mermaid' });
+}
+
+function apInitCollapse() {
+  document.querySelectorAll('.ap-main h2').forEach(h => h.addEventListener('click', () => h.classList.toggle('collapsed')));
+  document.getElementById('ap-collapse-all')?.addEventListener('click', () => document.querySelectorAll('.ap-main h2').forEach(h => h.classList.add('collapsed')));
+  document.getElementById('ap-expand-all')?.addEventListener('click', () => document.querySelectorAll('.ap-main h2').forEach(h => h.classList.remove('collapsed')));
+}
+
+function apInitCopyButtons() {
+  document.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('ap-copy-btn')) return;
+    const pre = e.target.closest('pre');
+    const code = pre?.querySelector('code')?.textContent || pre?.textContent || '';
+    navigator.clipboard.writeText(code).then(() => {
+      e.target.textContent = '✓ copied';
+      e.target.classList.add('copied');
+      apToast('código copiado');
+      setTimeout(() => { e.target.textContent = 'copy'; e.target.classList.remove('copied'); }, 1500);
+    });
+  });
+}
+
+function apInitTOC() {
+  const links = document.querySelectorAll('#ap-toc a');
+  const sections = Array.from(document.querySelectorAll('.ap-main section[id], .ap-main h2[id]'));
+  if (!sections.length) return;
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        const id = en.target.id;
+        links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => obs.observe(s));
+  links.forEach(a => a.addEventListener('click', (e) => {
+    const id = a.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  }));
+}
+
+const apPalette = { items: [], filtered: [], sel: 0 };
+function apOpenPalette() {
+  apPalette.items = Array.from(document.querySelectorAll('.ap-main h2[id], .ap-main section[id]')).map(el => ({
+    label: 'Ir para: ' + (el.textContent || el.id).trim().replace(/^▸\s*/, ''),
+    action: () => el.scrollIntoView({ behavior: 'smooth' })
+  }));
+  apPalette.items.push({ label: 'Ação: Colapsar tudo', action: () => document.getElementById('ap-collapse-all')?.click() });
+  apPalette.items.push({ label: 'Ação: Expandir tudo', action: () => document.getElementById('ap-expand-all')?.click() });
+  const bg = document.getElementById('ap-palette-bg');
+  bg.classList.add('open');
+  const inp = document.getElementById('ap-palette-input');
+  inp.value = ''; apPalette.sel = 0;
+  apRenderPalette('');
+  setTimeout(() => inp.focus(), 50);
+}
+function apClosePalette(e) {
+  if (e && e.target.id !== 'ap-palette-bg') return;
+  document.getElementById('ap-palette-bg').classList.remove('open');
+}
+function apRenderPalette(q) {
+  const r = document.getElementById('ap-palette-results');
+  const items = apPalette.items.filter(i => i.label.toLowerCase().includes(q.toLowerCase()));
+  apPalette.filtered = items;
+  r.innerHTML = items.map((it, i) => `<div class="item ${i === apPalette.sel ? 'selected' : ''}" data-i="${i}">${it.label}</div>`).join('');
+  r.querySelectorAll('.item').forEach(el => el.addEventListener('click', () => {
+    apPalette.filtered[+el.dataset.i].action();
+    apClosePalette({ target: { id: 'ap-palette-bg' } });
+  }));
+}
+function apInitPalette() {
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); apOpenPalette(); }
+    if (e.key === 'Escape') apClosePalette({ target: { id: 'ap-palette-bg' } });
+  });
+  const inp = document.getElementById('ap-palette-input');
+  inp?.addEventListener('input', () => { apPalette.sel = 0; apRenderPalette(inp.value); });
+  inp?.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); apPalette.sel = Math.min(apPalette.sel + 1, (apPalette.filtered.length || 1) - 1); apRenderPalette(inp.value); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); apPalette.sel = Math.max(apPalette.sel - 1, 0); apRenderPalette(inp.value); }
+    if (e.key === 'Enter') { e.preventDefault(); apPalette.filtered[apPalette.sel]?.action(); apClosePalette({ target: { id: 'ap-palette-bg' } }); }
+  });
+}
+
+function apToast(msg) {
+  const t = document.getElementById('ap-toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window.__apToastT);
+  window.__apToastT = setTimeout(() => t.classList.remove('show'), 1800);
+}
+</script>
+
+</body>
+</html>
