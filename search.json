@@ -1,5 +1,17 @@
 [
   {
+    "title": "Dossiê AvivMed",
+    "tema": "2026-11-vitascience",
+    "tags": [
+      "vitascience",
+      "regulatorio",
+      "protegido"
+    ],
+    "date": "2026-11-05",
+    "snippet": "Artefato protegido por senha (AES-GCM). Conteúdo não indexado.",
+    "url": "research/2026-11-vitascience/artifacts/dossie-avivmed/"
+  },
+  {
     "title": "Pianola, conductor of the week",
     "tema": "2026-09-maestro",
     "tags": [
